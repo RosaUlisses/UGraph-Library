@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using GraphLib;
+using GraphLib.Vertex;
 
+Console.WriteLine("oi");
 
-Graph<int, double, string,int> g = new AdjacencyList<int, double, string,int>();

@@ -7,21 +7,26 @@ using GraphLib.Vertex;
 
 namespace GraphLib
 {
-    public class AdjacencyList<TValue, TType, TWeight, TProperty> : Graph<TValue, TType, TWeight, TProperty>
+    public class AdjacencyList<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
     {
-        private Dictionary<Vertex<TValue>, List<Vertex<TValue>>> adjacenyLists;
-        public int Count { get; private set; }
-        public AdjacencyList()
+        
+        public override void AddVertex(TVertex vertex)
         {
-            adjacenyLists = new Dictionary<Vertex<TValue>, List<Vertex<TValue>>>();
-            Count = 0;
+            throw new NotImplementedException();
         }
-        
-        public override void AddVertex(Vertex<TValue> vertex)
+
+        public override void RemoveVertex(TVertex value)
         {
-            adjacenyLists.Add(vertex, new List<Vertex<TValue>>());
+            throw new NotImplementedException();
         }
-        
-        
+        public override void AddEdge(TEdge edge)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void RemoveEdge(TEdge edge)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

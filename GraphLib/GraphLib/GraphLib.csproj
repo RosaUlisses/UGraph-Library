@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <Compile Remove="IGraph.cs" />
+    <Compile Remove="Vertex\VertexWithProperty.cs" />
+    <Compile Remove="Edge\I.cs" />
+    <Compile Remove="Edge\IEdge.cs" />
   </ItemGroup>
 
 </Project>

@@ -7,11 +7,11 @@ using GraphLib.Vertex;
 
 namespace GraphLib
 {
-    public abstract class Graph<TValue, TType, TWeight, TProperty>
+    public abstract class Graph<TVertex, TEdge, TGraphType>
     {
-        public abstract void AddVertex(Vertex<TValue> vertex);
-        // public abstract void RemoveVertex(TValue value);
-        // public abstract void AddEdge(TValue source, TValue destination);
-        // public abstract void RemoveEdge(TValue source, TValue destination);
+        public abstract void AddVertex(TVertex vertex);
+        public abstract void RemoveVertex(TVertex value);
+        public abstract void AddEdge(TEdge edge);
+        public abstract void RemoveEdge(TEdge edge);
     }
 }
