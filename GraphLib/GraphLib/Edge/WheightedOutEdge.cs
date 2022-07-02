@@ -2,11 +2,16 @@
 
 namespace GraphLib.Edge
 {
-    public class WheightedOutEdge<TVertex,TWheight> : OutEdge<TVertex, TWheight>
+    public class WheightedOutEdge<TVertex, TWheight> : OutEdge<TVertex>
     {
-        public TWheight Wheight { get; } 
+        public TWheight Wheight { get; }
+
+        public bool HasWheight()
+        {
+            return true;
+        } 
         
-        public WheightedOutEdge(IEdge<TVertex, TWheight> edge) : base(edge)
+        public WheightedOutEdge(IEdge<TVertex, TWheight> edge) : base(edge.GetDestination())
         {
             Wheight = edge.GetWheight();
         }

@@ -2,13 +2,18 @@
 
 namespace GraphLib.Edge
 {
-    public class OutEdge<TVertex,TWheight>
+    public class OutEdge<TVertex>
     {
         public TVertex Destination { get; }
 
-        public OutEdge(IEdge<TVertex, TWheight> edge)
+        public bool HasWheight()
         {
-            Destination = edge.GetDestination();
+            return false;
+        }
+
+        public OutEdge(TVertex destination)
+        {
+            destination = destination;
         }
     }   
 }

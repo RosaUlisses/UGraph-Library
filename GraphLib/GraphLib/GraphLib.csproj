@@ -15,6 +15,7 @@
     <Compile Remove="Edge\WheigthedEdgeRepresentation.cs" />
     <Compile Remove="Edge\EdgeRepresentation.cs" />
     <Compile Remove="Edge\WheigthedEdge.cs" />
+    <Compile Remove="Edge\WheightedEdgeInterface.cs" />
   </ItemGroup>
 
   <ItemGroup>
