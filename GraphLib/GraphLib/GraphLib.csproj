@@ -12,6 +12,13 @@
     <Compile Remove="Vertex\VertexWithProperty.cs" />
     <Compile Remove="Edge\I.cs" />
     <Compile Remove="Edge\IEdge.cs" />
+    <Compile Remove="Edge\WheigthedEdgeRepresentation.cs" />
+    <Compile Remove="Edge\EdgeRepresentation.cs" />
+    <Compile Remove="Edge\WheigthedEdge.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Propertys" />
   </ItemGroup>
 
 </Project>

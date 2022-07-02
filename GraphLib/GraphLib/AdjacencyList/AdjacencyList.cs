@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GraphLib.Vertex;
+using GraphLib.Edge;
 
 namespace GraphLib
 {
-    public class AdjacencyList<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
+    public class AdjacencyList<TVertex, TEdge, TWheight, TGraphType> : 
+        Graph<TVertex, TEdge, TWheight,TGraphType> where TEdge : IEdge<TVertex, TGraphType>
     {
-        
+        public AdjacencyList()
+        {
+        }
         public override void AddVertex(TVertex vertex)
         {
             throw new NotImplementedException();

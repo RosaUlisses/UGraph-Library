@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GraphLib.Vertex;
+using GraphLib.Edge;
 
 namespace GraphLib
 {
-    public abstract class Graph<TVertex, TEdge, TGraphType>
+    public abstract class Graph<TVertex, TEdge, TWheight, TGraphType> where TEdge : IEdge<TVertex, TGraphType>
     {
         public abstract void AddVertex(TVertex vertex);
         public abstract void RemoveVertex(TVertex value);

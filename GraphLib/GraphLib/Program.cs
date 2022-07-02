@@ -3,5 +3,3 @@
 using GraphLib;
 using GraphLib.Vertex;
 
-Console.WriteLine("oi");
-

@@ -1,16 +1,43 @@
-﻿using GraphLib.Vertex;
-
-namespace GraphLib.Edge
+﻿namespace GraphLib.Edge
 {
-    public class Edge<T>
+    public class Edge<TVertex, TWheight> : IEdge<TVertex, TWheight>
     {
-        public Vertex<T> Source { get; }
-        public Vertex<T> Destination { get; }
+        public TVertex Source { get; }
+        public TVertex Destination { get; }
+        public TWheight Wheight { get; }
 
-        public Edge(Vertex<T> source, Vertex<T> destination)
+        public Edge(TVertex source, TVertex destination)
         {
             Source = source;
             Destination = destination;
+            Wheight = default(TWheight);
+        }
+
+        public Edge(TVertex source, TVertex destination, TWheight wheight)
+        {
+            Source = source;
+            Destination = destination;
+            Wheight = wheight;
+        }
+
+        public bool HasWeight()
+        {
+            return false;
+        }
+
+        public TWheight GetWheight()
+        {
+            return Wheight;
+        }
+
+        public TVertex GetSource()
+        {
+            return Source;
+        }
+
+        public TVertex GetDestination()
+        {
+            return Destination;
         }
     }   
 }
