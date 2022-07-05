@@ -6,7 +6,8 @@ using GraphLib.Edge;
 
 namespace GraphLib
 {
-    public abstract class Graph<TVertex, TEdge, TWheight, TGraphType> where TEdge : IEdge<TVertex, TGraphType>
+    public abstract class Graph<TVertex, TEdge, TGraphType>
+        where TEdge : IEdge<TVertex>
     {
         public abstract void AddVertex(TVertex vertex);
         public abstract void RemoveVertex(TVertex vertex);

@@ -1,8 +1,9 @@
-﻿
-namespace GraphLib.Edge
+﻿namespace GraphLib.Edge
 {
-    public interface <>
-    {
-        
-    }
+   public interface IEdge<TVertex>
+   {
+      public TVertex GetSource();
+      public TVertex GetDestination();
+      public double GetWheight();
+   }
 }

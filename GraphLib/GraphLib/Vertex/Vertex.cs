@@ -12,12 +12,18 @@ namespace GraphLib.Vertex
 
         public Vertex(T value)
         {
+            // TODO -> levantar execao caso value for null
             Value = value;
         }
 
         public override bool Equals(object? obj)
         {
-            return base.Equals(obj);
+            if (obj == null || GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            Vertex<T> vertex = (Vertex<T>)obj;
+            return Value.Equals(vertex.Value);
         }
 
         public override int GetHashCode()

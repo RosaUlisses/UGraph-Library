@@ -1,33 +1,25 @@
-﻿namespace GraphLib.Edge
+﻿using System.Net.Sockets;
+
+namespace GraphLib.Edge
 {
-    public class Edge<TVertex, TWheight> : IEdge<TVertex, TWheight>
+    public class Edge<TVertex> :  IEdge<TVertex>
     {
         public TVertex Source { get; }
         public TVertex Destination { get; }
-        public TWheight Wheight { get; }
+        public double Wheight { get; }
 
-        public Edge(TVertex source, TVertex destination)
-        {
-            Source = source;
-            Destination = destination;
-            Wheight = default(TWheight);
-        }
-
-        public Edge(TVertex source, TVertex destination, TWheight wheight)
+        public Edge(TVertex source, TVertex destination, double wheight)
         {
             Source = source;
             Destination = destination;
             Wheight = wheight;
         }
 
-        public bool HasWeight()
+        public Edge(TVertex source, TVertex destination)
         {
-            return false;
-        }
-
-        public TWheight GetWheight()
-        {
-            return Wheight;
+            Source = source;
+            Destination = destination;
+            Wheight = 1;
         }
 
         public TVertex GetSource()
@@ -38,6 +30,11 @@
         public TVertex GetDestination()
         {
             return Destination;
+        }
+
+        public double GetWheight()
+        {
+            return Wheight;
         }
     }   
 }

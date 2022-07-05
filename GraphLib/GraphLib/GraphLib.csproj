@@ -11,15 +11,21 @@
     <Compile Remove="IGraph.cs" />
     <Compile Remove="Vertex\VertexWithProperty.cs" />
     <Compile Remove="Edge\I.cs" />
-    <Compile Remove="Edge\IEdge.cs" />
     <Compile Remove="Edge\WheigthedEdgeRepresentation.cs" />
     <Compile Remove="Edge\EdgeRepresentation.cs" />
     <Compile Remove="Edge\WheigthedEdge.cs" />
+    <Compile Remove="Edge\Edge2.cs" />
     <Compile Remove="Edge\WheightedEdgeInterface.cs" />
+    <Compile Remove="Edge\WheightedOutEdge.cs" />
+    <Compile Remove="Propertys\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Propertys" />
+    <EmbeddedResource Remove="Propertys\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Propertys\**" />
   </ItemGroup>
 
 </Project>
