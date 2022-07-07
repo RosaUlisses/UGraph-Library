@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace GraphLib.Vertex
 {
-    public class Vertex<T>
+    public class Vertex<T> : IComparable<Vertex<T>>
+    where T : IComparable<T>
     {
         public T Value { get; }
 
@@ -29,6 +30,11 @@ namespace GraphLib.Vertex
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public int CompareTo(Vertex<T>? other)
+        {
+            return Value.CompareTo(other.Value);
         }
     }   
 }

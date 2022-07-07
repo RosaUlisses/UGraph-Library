@@ -1,17 +1,19 @@
 ﻿using GraphLib.Edge;
+using GraphLib.Vertex;
 
 namespace GraphLib.Edge
 {
-    public class OutEdge<TVertex>
+    public class OutEdge<TVertex> : IComparable<OutEdge<TVertex>>
+    where TVertex : IComparable<TVertex>
     {
         public TVertex Destination { get; }
         public double Wheight { get; }
         
-        public OutEdge(IEdge<TVertex> edge)
+        public OutEdge(TVertex vertex, double wheight)
         {
             // TODO -> levantar execao caso edge seja null
-            Destination = edge.GetDestination();
-            Wheight = edge.GetWheight();
+            Destination = vertex; 
+            Wheight = wheight;
         }
         
         public override bool Equals(object? obj)
@@ -28,6 +30,18 @@ namespace GraphLib.Edge
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public int CompareTo(OutEdge<TVertex>? other)
+        {
+            int result = Destination.CompareTo(other.Destination);
+            if (result < 0) return -1;
+            if (result > 0) return 1;
+
+            if (Wheight < other.Wheight) return -1;
+            if (Wheight > other.Wheight) return 1;
+
+            return 0;
         }
     }   
 }

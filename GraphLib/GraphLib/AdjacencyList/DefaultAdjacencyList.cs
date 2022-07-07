@@ -9,28 +9,26 @@ using GraphLib.Propertys;
 
 namespace GraphLib.AdjacencyList
 {
-    public class AdjacencyList<TVertex, TEdge, TGraphType, TList, TMap> : Graph<TVertex, TEdge, TGraphType>
+    public class AdjacencyList<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
         where TVertex : IComparable<TVertex>
         where TGraphType : GraphType
         where TEdge : IEdge<TVertex>
-        where TList : ICollection<OutEdge<TVertex>>, new()
-        where TMap : IDictionary<TVertex, TList>, new()
     {
         private Type graphType;
-        private IDictionary<TVertex, TList> adjacency_lists;
+        private Dictionary<TVertex, List<OutEdge<TVertex>>> adjacency_lists;
         
         public int Count { get { return adjacency_lists.Count; } }
 
         public AdjacencyList()
         {
-            adjacency_lists = new TMap();
+            adjacency_lists = new Dictionary<TVertex, List<OutEdge<TVertex>>>();
             graphType = typeof(TGraphType);
         }
 
         public override void AddVertex(TVertex vertex)
         {
             // TODO -> levantar execao caso vertex seja null 
-            adjacency_lists.Add(vertex, new TList());
+            adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -46,10 +44,12 @@ namespace GraphLib.AdjacencyList
             adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWheight())); 
             adjacency_lists[edge.GetDestination()].Add(new(edge.GetSource(), edge.GetWheight()));
         }
+        
         private void AddEdgeEdgeDirectedGraph(TEdge edge)
         {
             adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWheight())); 
         }
+        
         public override void AddEdge(TEdge edge)
         {
             // TODO -> levantar execao caso edge seja null 
@@ -67,6 +67,7 @@ namespace GraphLib.AdjacencyList
         {
             adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWheight())); 
         }
+        
         public override void RemoveEdge(TEdge edge)
         {
             // TODO -> levantar execao caso edge seja null 

@@ -17,15 +17,7 @@
     <Compile Remove="Edge\Edge2.cs" />
     <Compile Remove="Edge\WheightedEdgeInterface.cs" />
     <Compile Remove="Edge\WheightedOutEdge.cs" />
-    <Compile Remove="Propertys\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Propertys\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Propertys\**" />
+    <Compile Remove="Propertys.cs" />
   </ItemGroup>
 
 </Project>

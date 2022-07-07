@@ -1,52 +1,18 @@
 ﻿namespace GraphLib
 {
-    public class Propertys
+    public class Directed<T>
     {
-         public class Collection
-         {
-         
-         }
-     
-         public class MapCollection
-         {
-             
-         }
-     
-         public class Vector : Collection
-         {
-                   
-         }
-     
-         public class LinkedList : Collection
-         {
-             
-         }
-     
-         public class Map : MapCollection
-         {
-             
-         }
-         
-         public class SortedMap : MapCollection
-         {
-         
-         }
-
-         public class SortedList : MapCollection
-         {
-             
-         }
-         
-         public class Set : Collection
-         {
-             
-         }
-     
-         public class SortedSet : Collection
-         {
-             
-         }       
+       public void imprime()
+       {
+           Console.WriteLine("oi");
+       } 
+       
+       public void Imprime<T2>() where T2 : class
+       {
+           Console.WriteLine("oiiiii");
+       }
     }
+    
 
 }
 
