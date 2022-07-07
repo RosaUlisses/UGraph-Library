@@ -12,9 +12,11 @@ namespace GraphLib
         where TGraphType : GraphType
         where TEdge : IEdge<TVertex>
     {
+        protected const int EMPTY_EDGE = 0; 
         public abstract void AddVertex(TVertex vertex);
         public abstract void RemoveVertex(TVertex vertex);
         public abstract void AddEdge(TEdge edge);
         public abstract void RemoveEdge(TEdge edge);
+        // public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
     }
 }

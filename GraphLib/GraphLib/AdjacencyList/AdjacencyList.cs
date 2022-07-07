@@ -23,8 +23,8 @@ namespace GraphLib.AdjacencyList
 
         public AdjacencyList()
         {
-            adjacency_lists = new TMap();
             graphType = typeof(TGraphType);
+            adjacency_lists = new TMap();
         }
 
         public override void AddVertex(TVertex vertex)
