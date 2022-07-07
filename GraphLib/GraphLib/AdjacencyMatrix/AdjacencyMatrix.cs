@@ -16,7 +16,7 @@ namespace GraphLib.AdjacencyMatrix
         private List<List<double>> matrix;
         private Stack<int> empty_indexes;
         private Dictionary<TVertex, int> index_map;
-        public int Cout { get; private set; }
+        public int Count { get; private set; }
 
         public AdjacencyMatrix()
         {
@@ -30,7 +30,11 @@ namespace GraphLib.AdjacencyMatrix
         {
             if (empty_indexes.Count == 0)
             {
-                matrix.Add(new List<double>());
+                matrix.Add(new List<double>(Count + 1));
+                foreach (List<double> list in matrix)
+                {
+                   list.Add(0); 
+                }
                 index_map.Add(vertex, matrix.Count - 1);
             }
             else
@@ -38,7 +42,7 @@ namespace GraphLib.AdjacencyMatrix
                 int index = empty_indexes.Pop();
                 index_map.Add(vertex, index);
             }
-            Cout++;
+            Count++;
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -49,8 +53,12 @@ namespace GraphLib.AdjacencyMatrix
             {
                 matrix[index][i] = EMPTY_EDGE;
             }
+            for (int i = 0; i < matrix.Count; i++)
+            {
+                matrix[i][index] = EMPTY_EDGE;
+            }
             index_map.Remove(vertex);
-            Cout--;
+            Count--;
         }
         
         private void AddEdgeUndirectedGraph(TEdge edge)
