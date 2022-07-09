@@ -9,10 +9,10 @@ namespace GraphLib.AdjacencyMatrix
 {
     public class IncidenceMatrix<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
         where TVertex : IComparable<TVertex>
-        where TGraphType : GraphType
         where TEdge : IEdge<TVertex>
+        where TGraphType : GraphType
     {
-        private Type graphType;
+        private readonly Type graphType;
         private List<List<double?>> matrix;
         private Stack<int> empty_vertex_indexes;
         private Stack<int> empty_edge_indexes;
@@ -86,7 +86,7 @@ namespace GraphLib.AdjacencyMatrix
              }                   
         }
         
-        private void AddEdgeEdgeDirectedGraph(TEdge edge)
+        private void AddEdgeDirectedGraph(TEdge edge)
         {
             if (empty_edge_indexes.Count == 0)
             {
@@ -108,7 +108,7 @@ namespace GraphLib.AdjacencyMatrix
         public override void AddEdge(TEdge edge)
         {
             // TODO -> levantar execao caso edge seja null 
-            if (graphType == typeof(Directed)) AddEdgeEdgeDirectedGraph(edge);
+            if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);     
         }
         
@@ -125,6 +125,11 @@ namespace GraphLib.AdjacencyMatrix
                   }
                   if (counter == 2) break;
               }           
+        }
+
+        public override int GetCount()
+        {
+            return Count;
         }
     }
 }

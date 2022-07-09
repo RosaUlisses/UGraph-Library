@@ -11,10 +11,10 @@ namespace GraphLib.AdjacencyList
 {
     public class AdjacencyList<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
         where TVertex : IComparable<TVertex>
-        where TGraphType : GraphType
         where TEdge : IEdge<TVertex>
+        where TGraphType : GraphType
     {
-        private Type graphType;
+        private readonly Type graphType;
         private Dictionary<TVertex, List<OutEdge<TVertex>>> adjacency_lists;
         
         public int Count { get { return adjacency_lists.Count; } }
@@ -73,6 +73,10 @@ namespace GraphLib.AdjacencyList
             // TODO -> levantar execao caso edge seja null 
             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
             else RemoveEdgeUndirectedGraph(edge);
+        }
+        public override int GetCount()
+        {
+            return Count;
         }
     }
 }
