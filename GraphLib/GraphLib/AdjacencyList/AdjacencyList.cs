@@ -78,5 +78,11 @@ namespace GraphLib.AdjacencyList
         {
             return Count;
         }
+
+        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        {
+            // TODO -> levantar execao se o vertice nao existir
+            return adjacency_lists[vertex].GetEnumerator();
+        }
     }
 }

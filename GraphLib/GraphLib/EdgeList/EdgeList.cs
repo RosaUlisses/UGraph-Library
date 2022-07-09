@@ -79,5 +79,19 @@ namespace GraphLib.EdgeList
         {
             return Count;
         }
+
+        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        {
+            List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
+
+            foreach (Edge<TVertex> edge in edge_list)
+            {
+                if (edge.Source.Equals(vertex))
+                {
+                   neighbours.Add(new OutEdge<TVertex>(edge.Destination, edge.Wheight)); 
+                } 
+            }
+            return neighbours.GetEnumerator();
+        }
     }
 }

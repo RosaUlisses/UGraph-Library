@@ -74,9 +74,16 @@ namespace GraphLib.AdjacencyList
             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
             else RemoveEdgeUndirectedGraph(edge);
         }
+        
         public override int GetCount()
         {
             return Count;
+        }
+
+        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        {
+            // TODO -> levantar execao se o vertice nao existir
+            return adjacency_lists[vertex].GetEnumerator();
         }
     }
 }

@@ -15,7 +15,8 @@ namespace GraphLib.AdjacencyMatrix
         private readonly Type graphType;
         private List<List<double>> matrix;
         private Stack<int> empty_indexes;
-        private Dictionary<TVertex, int> index_map;
+        private Dictionary<TVertex, int> vertex_index_map;
+        private Dictionary<int, TVertex> index_vertex_map;
         public int Count { get; private set; }
 
         public AdjacencyMatrix()
@@ -23,7 +24,8 @@ namespace GraphLib.AdjacencyMatrix
             graphType = typeof(TGraphType);
             matrix = new List<List<double>>();
             empty_indexes = new Stack<int>();
-            index_map = new Dictionary<TVertex, int>();
+            vertex_index_map = new Dictionary<TVertex, int>();
+            index_vertex_map = new Dictionary<int, TVertex>();
         } 
         
         public override void AddVertex(TVertex vertex)
@@ -35,19 +37,21 @@ namespace GraphLib.AdjacencyMatrix
                 {
                    list.Add(0); 
                 }
-                index_map.Add(vertex, matrix.Count - 1);
+                vertex_index_map.Add(vertex, matrix.Count - 1);
+                index_vertex_map.Add(matrix.Count - 1, vertex);
             }
             else
             {
                 int index = empty_indexes.Pop();
-                index_map.Add(vertex, index);
+                vertex_index_map.Add(vertex, index);
+                index_vertex_map.Add(index, vertex);
             }
             Count++;
         }
 
         public override void RemoveVertex(TVertex vertex)
         {
-            int index = index_map[vertex];
+            int index = vertex_index_map[vertex];
             empty_indexes.Push(index);
             for (int i = 0; i < matrix[index].Count; i++)
             {
@@ -57,19 +61,20 @@ namespace GraphLib.AdjacencyMatrix
             {
                 matrix[i][index] = EMPTY_EDGE;
             }
-            index_map.Remove(vertex);
+            vertex_index_map.Remove(vertex);
+            index_vertex_map.Remove(index);
             Count--;
         }
         
         private void AddEdgeUndirectedGraph(TEdge edge)
         {
-            matrix[index_map[edge.GetSource()]][index_map[edge.GetDestination()]] = edge.GetWheight();
-            matrix[index_map[edge.GetDestination()]][index_map[edge.GetSource()]] = edge.GetWheight();
+            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWheight();
+            matrix[vertex_index_map[edge.GetDestination()]][vertex_index_map[edge.GetSource()]] = edge.GetWheight();
         }
         
         private void AddEdgeDirectedGraph(TEdge edge)
         {
-            matrix[index_map[edge.GetSource()]][index_map[edge.GetDestination()]] = edge.GetWheight();
+            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWheight();
         }
         public override void AddEdge(TEdge edge)
         {
@@ -80,13 +85,13 @@ namespace GraphLib.AdjacencyMatrix
         
          private void RemoveEdgeUndirectedGraph(TEdge edge)
          {
-            matrix[index_map[edge.GetSource()]][index_map[edge.GetDestination()]] = 0;
-            matrix[index_map[edge.GetDestination()]][index_map[edge.GetSource()]] = 0;
+            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = 0;
+            matrix[vertex_index_map[edge.GetDestination()]][vertex_index_map[edge.GetSource()]] = 0;
          }
  
          private void RemoveEdgeDirectedGraph(TEdge edge)
          {
-            matrix[index_map[edge.GetSource()]][index_map[edge.GetDestination()]] = 0;
+            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = 0;
          }       
 
         public override void RemoveEdge(TEdge edge)
@@ -98,6 +103,23 @@ namespace GraphLib.AdjacencyMatrix
         public override int GetCount()
         {
             return Count;
+        }
+
+        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        {
+            // TODO -> levantar execao se o vertice nao existir
+            List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
+            int index = vertex_index_map[vertex];
+
+            for (int i = 0; i < matrix[index].Count; i++)
+            {
+                if (matrix[index][i] != 0)
+                {
+                    neighbours.Add(new OutEdge<TVertex>(index_vertex_map[index], matrix[index][i]));
+                }
+            }
+
+            return neighbours.GetEnumerator();
         }
     }
 }

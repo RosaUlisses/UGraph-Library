@@ -72,9 +72,15 @@ namespace GraphLib.EdgeList
                 
         }
 
+        
         public override int GetCount()
         {
             return Count;
+        }
+
+        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        {
+            throw new NotImplementedException();
         }
     }
 }

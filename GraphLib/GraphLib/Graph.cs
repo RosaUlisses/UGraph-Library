@@ -18,6 +18,6 @@ namespace GraphLib
         public abstract void AddEdge(TEdge edge);
         public abstract void RemoveEdge(TEdge edge);
         public abstract int GetCount();
-        // public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
+        public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
     }
 }
