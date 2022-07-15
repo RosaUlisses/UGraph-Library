@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using GraphLib.Propertys;
 using GraphLib.Edge;
+using GraphLib.Exceptions;
 
 namespace GraphLib.AdjacencyMatrix
 {
@@ -51,7 +52,20 @@ namespace GraphLib.AdjacencyMatrix
 
         public override void RemoveVertex(TVertex vertex)
         {
-            int index = vertex_index_map[vertex];
+            int index;
+            try
+            {
+                index = vertex_index_map[vertex];
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
+                
             empty_indexes.Push(index);
             for (int i = 0; i < matrix[index].Count; i++)
             {

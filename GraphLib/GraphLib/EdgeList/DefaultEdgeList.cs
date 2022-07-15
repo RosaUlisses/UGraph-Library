@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GraphLib.Propertys;
 using GraphLib.Edge;
+using GraphLib.Exceptions;
 
 
 namespace GraphLib.EdgeList
@@ -30,8 +31,20 @@ namespace GraphLib.EdgeList
 
         public override void RemoveVertex(TVertex vertex)
         {
-            // TODO -> levantar execao
-            vertex_list.Remove(vertex);
+            bool result;
+            try
+            {
+                result = vertex_list.Remove(vertex);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+
+            if (!result)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }           
         }
 
         private void AddEdgeDirectedGraph(TEdge edge)
@@ -72,7 +85,6 @@ namespace GraphLib.EdgeList
                 
         }
 
-        
         public override int GetCount()
         {
             return Count;

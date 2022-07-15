@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using GraphLib.Edge;
+using GraphLib.Exceptions;
 using GraphLib.Propertys;
 
 namespace GraphLib.AdjacencyList
@@ -29,14 +30,25 @@ namespace GraphLib.AdjacencyList
         {
             // TODO -> levantar execao caso vertex seja null 
             adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
+            
         }
 
         public override void RemoveVertex(TVertex vertex)
         {
-            // TODO -> levantar execao caso vertex seja null 
-            // TODO -> levantar execao caso o vertice nao exista
-            // TODO -> levantar execao caso o o grafo esteja vazio
-            adjacency_lists.Remove(vertex);
+            bool result;
+            try
+            {
+                result = adjacency_lists.Remove(vertex);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+
+            if (!result)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
         }
 
         private void AddEdgeUndirectedGraph(TEdge edge)
