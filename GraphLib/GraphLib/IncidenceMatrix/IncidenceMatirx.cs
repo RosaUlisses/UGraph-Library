@@ -155,24 +155,36 @@ namespace GraphLib.IncidenceMatrix
         {
             // TODO -> levantar execao se o vertice nao existir
             List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
-            int index = vertex_index_map[vertex];
-
-            for (int i = 0; i < matrix[index].Count; i++)
+            try
             {
-                if (matrix[index][i] != null && matrix[index][i] != 0)
+                int index = vertex_index_map[vertex];
+                for (int i = 0; i < matrix[index].Count; i++)
                 {
-                    for (int j = 0; j < matrix.Count; j++)
+                    if (matrix[index][i] != null && matrix[index][i] != 0)
                     {
-                        // Null eh igual a 0 ???
-                        if (matrix[j][i] == null || matrix[j][i] != 0)
+                        for (int j = 0; j < matrix.Count; j++)
                         {
-                            neighbours.Add(new OutEdge<TVertex>(index_vertex_map[j], (double) matrix[index][i]));
-                            break;
+                            // Null eh igual a 0 ???
+                            if (matrix[j][i] == null || matrix[j][i] != 0)
+                            {
+                                neighbours.Add(new OutEdge<TVertex>(index_vertex_map[j], (double) matrix[index][i]));
+                                break;
+                            }
                         }
                     }
                 }
+                return neighbours.GetEnumerator();
             }
-            return neighbours.GetEnumerator();
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
+
+
         }
     }
 }

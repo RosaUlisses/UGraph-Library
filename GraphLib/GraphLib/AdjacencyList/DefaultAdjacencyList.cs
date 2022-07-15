@@ -28,7 +28,6 @@ namespace GraphLib.AdjacencyList
 
         public override void AddVertex(TVertex vertex)
         {
-            // TODO -> levantar execao caso vertex seja null 
             adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
             
         }
@@ -82,9 +81,19 @@ namespace GraphLib.AdjacencyList
         
         public override void RemoveEdge(TEdge edge)
         {
-            // TODO -> levantar execao caso edge seja null 
-            if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
-            else RemoveEdgeUndirectedGraph(edge);
+            try
+            {
+                if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
+                else RemoveEdgeUndirectedGraph(edge);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
         }
         
         public override int GetCount()
@@ -94,8 +103,18 @@ namespace GraphLib.AdjacencyList
 
         public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
         {
-            // TODO -> levantar execao se o vertice nao existir
-            return adjacency_lists[vertex].GetEnumerator();
+            try
+            {
+                return adjacency_lists[vertex].GetEnumerator();
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
         }
     }
 }

@@ -121,19 +121,27 @@ namespace GraphLib.AdjacencyMatrix
 
         public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
         {
-            // TODO -> levantar execao se o vertice nao existir
             List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
-            int index = vertex_index_map[vertex];
-
-            for (int i = 0; i < matrix[index].Count; i++)
+            try
             {
-                if (matrix[index][i] != 0)
+                int index = vertex_index_map[vertex];
+                for (int i = 0; i < matrix[index].Count; i++)
                 {
-                    neighbours.Add(new OutEdge<TVertex>(index_vertex_map[index], matrix[index][i]));
+                    if (matrix[index][i] != 0)
+                    {
+                        neighbours.Add(new OutEdge<TVertex>(index_vertex_map[index], matrix[index][i]));
+                    }
                 }
+                return neighbours.GetEnumerator();
             }
-
-            return neighbours.GetEnumerator();
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
         }
     }
 }

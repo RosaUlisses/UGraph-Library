@@ -96,6 +96,9 @@ namespace GraphLib.EdgeList
         public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
         {
             List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
+            
+            if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
+            else if(vertex_list.IndexOf(vertex) == -1) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
 
             foreach (Edge<TVertex> edge in edge_list)
             {

@@ -19,5 +19,29 @@ namespace GraphLib
         public abstract void RemoveEdge(TEdge edge);
         public abstract int GetCount();
         public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
+
+        public List<TVertex> BreadthFirstSearch(TVertex source){
+            List<TVertex> path  = new List<TVertex>();
+            Queue<TVertex> queue = new Queue<TVertex>();
+            HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
+
+            queue.Enqueue(source);
+
+            while(queue.Count != 0)
+            {
+                TVertex vertex = queue.Dequeue();
+                if(!visitedVertexes.Contains(vertex))
+                {
+                    visitedVertexes.Add(vertex);
+                    IEnumerator<OutEdge<TVertex>> neighbours = vertex.GetNeihgbours();
+                    while(neighbours.MoveNext())
+                    {
+                        if(!visitedVertexes.Contains(neighbours.Current)) queue.Enqueue(neighbours.Current);
+                    }
+                    visitedVertexes
+                }
+            }
+            
+        }
     }
 }
