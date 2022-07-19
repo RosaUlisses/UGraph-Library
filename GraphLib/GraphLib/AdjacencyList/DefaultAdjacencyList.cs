@@ -27,6 +27,7 @@ namespace GraphLib.AdjacencyList
 
         public override void AddVertex(TVertex vertex)
         {
+            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
             adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
         }
 
@@ -50,31 +51,41 @@ namespace GraphLib.AdjacencyList
 
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWheight())); 
-            adjacency_lists[edge.GetDestination()].Add(new(edge.GetSource(), edge.GetWheight()));
+            adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWeight())); 
+            adjacency_lists[edge.GetDestination()].Add(new(edge.GetSource(), edge.GetWeight()));
         }
         
         private void AddEdgeEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWheight())); 
+            adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWeight())); 
         }
         
         public override void AddEdge(Edge<TVertex> edge)
         {
-            // TODO -> levantar execao caso edge seja null 
-            if (graphType == typeof(Directed)) AddEdgeEdgeDirectedGraph(edge);
-            else AddEdgeUndirectedGraph(edge);
+            try
+            {
+                if (graphType == typeof(Directed)) AddEdgeEdgeDirectedGraph(edge);
+                else AddEdgeUndirectedGraph(edge);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+            }
         }
 
         private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWheight())); 
-            adjacency_lists[edge.GetDestination()].Remove(new(edge.GetSource(), edge.GetWheight()));
+            adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWeight())); 
+            adjacency_lists[edge.GetDestination()].Remove(new(edge.GetSource(), edge.GetWeight()));
         }
 
         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWheight())); 
+            adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWeight())); 
         }
         
         public override void RemoveEdge(Edge<TVertex> edge)
@@ -86,11 +97,11 @@ namespace GraphLib.AdjacencyList
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException("A vertex can not be null");
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Edge {edge} does not exist in the graph");
+                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
             }
         }
         

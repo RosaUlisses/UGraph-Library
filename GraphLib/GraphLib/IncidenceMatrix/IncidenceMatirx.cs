@@ -34,6 +34,7 @@ namespace GraphLib.IncidenceMatrix
         
         public override void AddVertex(TVertex vertex)
         {
+            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
             if (empty_vertex_indexes.Count == 0)
             {
                 vertex_index_map.Add(vertex, matrix.Count - 1);
@@ -93,14 +94,14 @@ namespace GraphLib.IncidenceMatrix
                  {
                     list.Add(0); 
                  }
-                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count] = edge.GetWheight();
+                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count] = edge.GetWeight();
                  matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count] = null;
              }
              else
              {
                  int index = empty_edge_indexes.Pop();
-                 matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWheight();
-                 matrix[vertex_index_map[edge.GetDestination()]][index] = edge.GetWheight();
+                 matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
+                 matrix[vertex_index_map[edge.GetDestination()]][index] = edge.GetWeight();
              }                   
         }
         
@@ -112,37 +113,59 @@ namespace GraphLib.IncidenceMatrix
                 {
                    list.Add(0); 
                 }
-                matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count] = edge.GetWheight();
+                matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count] = null;
             }
             else
             {
                 int index = empty_edge_indexes.Pop();
-                matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWheight();
+                matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][index] = null;
             }
         }
         
         public override void AddEdge(Edge<TVertex> edge)
         {
-            // TODO -> levantar execao caso edge seja null 
-            if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
-            else AddEdgeUndirectedGraph(edge);     
+            try
+            {
+                if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
+                else AddEdgeUndirectedGraph(edge);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+            }
         }
         
         public override void RemoveEdge(Edge<TVertex> edge)
-        {            
-              int index = index_edge_map[edge];
-              int counter = 0;
-              for (int i = 0; i < matrix.Count; i++)
-              {
-                  if (matrix[i][index] != 0)
-                  {
-                      matrix[i][index] = 0;
-                      counter++;
-                  }
-                  if (counter == 2) break;
-              }           
+        {
+            try
+            {
+                int index = index_edge_map[edge];
+                int counter = 0;
+                for (int i = 0; i < matrix.Count; i++)
+                {
+                    if (matrix[i][index] != 0)
+                    {
+                        matrix[i][index] = 0;
+                        counter++;
+                    }
+
+                    if (counter == 2) break;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+            }
         }
 
         public override int GetCount()
@@ -152,7 +175,6 @@ namespace GraphLib.IncidenceMatrix
 
         public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
         {
-            // TODO -> levantar execao se o vertice nao existir
             List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
             try
             {

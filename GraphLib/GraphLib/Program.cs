@@ -5,7 +5,5 @@ using System.Runtime.InteropServices;
 using GraphLib;
 using GraphLib.Edge;
 using GraphLib.Propertys;
-using GraphLib.Vertex;
 using GraphLib.AdjacencyList;
 using GraphLib.AdjacencyMatrix;
-

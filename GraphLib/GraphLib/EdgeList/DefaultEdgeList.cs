@@ -48,13 +48,13 @@ namespace GraphLib.EdgeList
 
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
+            edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
         }
 
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
-            edge_list.Add(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWheight()));
+            edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
+            edge_list.Add(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWeight()));
         }
 
         public override void AddEdge(Edge<TVertex> edge)
@@ -66,13 +66,13 @@ namespace GraphLib.EdgeList
         
         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
+            edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
         }
 
         private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
-            edge_list.Remove(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWheight()));
+            edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
+            edge_list.Remove(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWeight()));
         }
 
         public override void RemoveEdge(Edge<TVertex> edge)
@@ -101,7 +101,7 @@ namespace GraphLib.EdgeList
             {
                 if (edge.Source.Equals(vertex))
                 {
-                   neighbours.Add(new OutEdge<TVertex>(edge.Destination, edge.Wheight)); 
+                   neighbours.Add(new OutEdge<TVertex>(edge.Destination, edge.Weight)); 
                 } 
             }
             return neighbours.GetEnumerator();

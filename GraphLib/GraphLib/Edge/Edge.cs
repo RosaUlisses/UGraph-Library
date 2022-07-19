@@ -6,20 +6,20 @@ namespace GraphLib.Edge
     {
         public TVertex Source { get; }
         public TVertex Destination { get; }
-        public double Wheight { get; }
+        public double Weight { get; }
 
-        public Edge(TVertex source, TVertex destination, double wheight)
+        public Edge(TVertex source, TVertex destination, double weight)
         {
             Source = source;
             Destination = destination;
-            Wheight = wheight;
+            Weight = weight;
         }
 
         public Edge(TVertex source, TVertex destination)
         {
             Source = source;
             Destination = destination;
-            Wheight = 1;
+            Weight = 1;
         }
 
         public TVertex GetSource()
@@ -32,9 +32,9 @@ namespace GraphLib.Edge
             return Destination;
         }
 
-        public double GetWheight()
+        public double GetWeight()
         {
-            return Wheight;
+            return Weight;
         }
     }   
 }

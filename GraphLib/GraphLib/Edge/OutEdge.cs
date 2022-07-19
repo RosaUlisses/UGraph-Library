@@ -1,5 +1,4 @@
 ﻿using GraphLib.Edge;
-using GraphLib.Vertex;
 
 namespace GraphLib.Edge
 {
@@ -7,13 +6,13 @@ namespace GraphLib.Edge
     where TVertex : IComparable<TVertex>
     {
         public TVertex Destination { get; }
-        public double Wheight { get; }
+        public double Weight { get; }
         
-        public OutEdge(TVertex vertex, double wheight)
+        public OutEdge(TVertex vertex, double weight)
         {
             // TODO -> levantar execao caso edge seja null
             Destination = vertex; 
-            Wheight = wheight;
+            Weight = weight;
         }
         
         public override bool Equals(object? obj)
@@ -23,7 +22,7 @@ namespace GraphLib.Edge
                 return false;
             }
             OutEdge<TVertex> outEdge = (OutEdge<TVertex>)obj;
-            return Destination.Equals(outEdge.Destination) && Wheight == outEdge.Wheight;
+            return Destination.Equals(outEdge.Destination) && Weight == outEdge.Weight;
         }
 
         // TODO -> fazer uma funcao hash boa
@@ -38,8 +37,8 @@ namespace GraphLib.Edge
             if (result < 0) return -1;
             if (result > 0) return 1;
 
-            if (Wheight < other.Wheight) return -1;
-            if (Wheight > other.Wheight) return 1;
+            if (Weight < other.Weight) return -1;
+            if (Weight > other.Weight) return 1;
 
             return 0;
         }

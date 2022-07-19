@@ -4,6 +4,6 @@
    {
       public TVertex GetSource();
       public TVertex GetDestination();
-      public double GetWheight();
+      public double GetWeight();
    }
 }

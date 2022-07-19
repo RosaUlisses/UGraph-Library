@@ -30,6 +30,7 @@ namespace GraphLib.AdjacencyMatrix
         
         public override void AddVertex(TVertex vertex)
         {
+            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
             if (empty_indexes.Count == 0)
             {
                 matrix.Add(new List<double>(Count + 1));
@@ -51,10 +52,21 @@ namespace GraphLib.AdjacencyMatrix
 
         public override void RemoveVertex(TVertex vertex)
         {
-            int index;
             try
             {
-                index = vertex_index_map[vertex];
+                int index = vertex_index_map[vertex];
+                empty_indexes.Push(index);
+                for (int i = 0; i < matrix[index].Count; i++)
+                {
+                    matrix[index][i] = EMPTY_EDGE;
+                }
+                for (int i = 0; i < matrix.Count; i++)
+                {
+                    matrix[i][index] = EMPTY_EDGE;
+                }
+                vertex_index_map.Remove(vertex);
+                index_vertex_map.Remove(index);
+                Count--;
             }
             catch (ArgumentNullException e)
             {
@@ -64,36 +76,33 @@ namespace GraphLib.AdjacencyMatrix
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             }
-                
-            empty_indexes.Push(index);
-            for (int i = 0; i < matrix[index].Count; i++)
-            {
-                matrix[index][i] = EMPTY_EDGE;
-            }
-            for (int i = 0; i < matrix.Count; i++)
-            {
-                matrix[i][index] = EMPTY_EDGE;
-            }
-            vertex_index_map.Remove(vertex);
-            index_vertex_map.Remove(index);
-            Count--;
         }
         
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWheight();
-            matrix[vertex_index_map[edge.GetDestination()]][vertex_index_map[edge.GetSource()]] = edge.GetWheight();
+            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWeight();
+            matrix[vertex_index_map[edge.GetDestination()]][vertex_index_map[edge.GetSource()]] = edge.GetWeight();
         }
         
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWheight();
+            matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWeight();
         }
         public override void AddEdge(Edge<TVertex> edge)
         {
-            // TODO -> levantar execao caso edge seja null 
-            if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
-            else AddEdgeUndirectedGraph(edge);     
+            try
+            {
+                if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
+                else AddEdgeUndirectedGraph(edge);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+            }
         }
         
          private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
@@ -108,11 +117,22 @@ namespace GraphLib.AdjacencyMatrix
          }       
 
         public override void RemoveEdge(Edge<TVertex> edge)
-        {            
-            // TODO -> levantar execao caso edge seja null 
-            if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
-            else RemoveEdgeUndirectedGraph(edge);
+        {
+            try
+            {
+                if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
+                else RemoveEdgeUndirectedGraph(edge);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+            }
         }
+        
         public override int GetCount()
         {
             return Count;
