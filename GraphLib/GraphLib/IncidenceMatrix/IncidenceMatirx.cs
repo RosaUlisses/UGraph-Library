@@ -183,8 +183,6 @@ namespace GraphLib.IncidenceMatrix
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             }
-
-
         }
     }
 }

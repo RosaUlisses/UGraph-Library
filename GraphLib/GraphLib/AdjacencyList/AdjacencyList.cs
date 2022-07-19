@@ -92,7 +92,7 @@ namespace GraphLib.AdjacencyList
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+                throw new InvalidVertexException($"Edge {edge} does not exist in the graph");
             }
         }
 

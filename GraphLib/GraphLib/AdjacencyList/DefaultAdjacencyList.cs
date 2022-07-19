@@ -29,7 +29,6 @@ namespace GraphLib.AdjacencyList
         public override void AddVertex(TVertex vertex)
         {
             adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
-            
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -92,7 +91,7 @@ namespace GraphLib.AdjacencyList
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+                throw new InvalidVertexException($"Edge {edge} does not exist in the graph");
             }
         }
         

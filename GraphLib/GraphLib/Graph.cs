@@ -20,7 +20,8 @@ namespace GraphLib
         public abstract int GetCount();
         public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
 
-        public List<TVertex> BreadthFirstSearch(TVertex source){
+        public List<TVertex> BreadthFirstSearch(TVertex source)
+        {
             List<TVertex> path  = new List<TVertex>();
             Queue<TVertex> queue = new Queue<TVertex>();
             HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
@@ -33,15 +34,56 @@ namespace GraphLib
                 if(!visitedVertexes.Contains(vertex))
                 {
                     visitedVertexes.Add(vertex);
-                    IEnumerator<OutEdge<TVertex>> neighbours = vertex.GetNeihgbours();
+                    IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
                     while(neighbours.MoveNext())
                     {
-                        if(!visitedVertexes.Contains(neighbours.Current)) queue.Enqueue(neighbours.Current);
-                    }
-                    visitedVertexes
+                        if(!visitedVertexes.Contains(neighbours.Current.Destination)) queue.Enqueue(neighbours.Current.Destination);
+                    } 
+                    path.Add(vertex);
                 }
             }
             
+            return path;
+        }
+
+        public List<TVertex> BreadthFirstSearch(TVertex source, TVertex destination)
+        {
+             LinkedList<TVertex> path  = new LinkedList<TVertex>();
+             Queue<TVertex> queue = new Queue<TVertex>();
+             HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
+             Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+             queue.Enqueue(source);
+
+             while(queue.Count != 0 || visitedVertexes.Contains(destination))
+             {
+                 TVertex vertex = queue.Dequeue();
+                 if(!visitedVertexes.Contains(vertex))
+                 {
+                     visitedVertexes.Add(vertex);
+                     IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
+                     while(neighbours.MoveNext())
+                     {
+                         if (!visitedVertexes.Contains(neighbours.Current.Destination))
+                         {
+                             queue.Enqueue(neighbours.Current.Destination);
+                             predecesors.Add(vertex, neighbours.Current.Destination);
+                         }
+                     } 
+                 }
+             }
+
+             if (visitedVertexes.Contains(destination))
+             {
+                 TVertex current = destination;
+                 while (!current.Equals(source))
+                 {
+                     path.AddFirst(current);
+                     current = predecesors[current];
+                 }
+                 path.AddFirst(current);
+             }
+
+             return path.ToList();
         }
     }
 }

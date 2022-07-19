@@ -5,6 +5,6 @@ namespace GraphLib.Exceptions
     {
         public InvalidEdgeException() : base() { }
         public InvalidEdgeException(string message) : base(message) { }
-        public InvalidVertexException(string message, Exception inner) : base(message, inner) { } 
+        public InvalidEdgeException(string message, Exception inner) : base(message, inner) { } 
     }    
 }
