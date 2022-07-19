@@ -8,9 +8,8 @@ using GraphLib.Exceptions;
 
 namespace GraphLib.AdjacencyMatrix
 {
-    public class AdjacencyMatrix<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
+    public class AdjacencyMatrix<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
-        where TEdge : IEdge<TVertex>
         where TGraphType : GraphType
     {
         private readonly Type graphType;
@@ -80,35 +79,35 @@ namespace GraphLib.AdjacencyMatrix
             Count--;
         }
         
-        private void AddEdgeUndirectedGraph(TEdge edge)
+        private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
             matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWheight();
             matrix[vertex_index_map[edge.GetDestination()]][vertex_index_map[edge.GetSource()]] = edge.GetWheight();
         }
         
-        private void AddEdgeDirectedGraph(TEdge edge)
+        private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
             matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = edge.GetWheight();
         }
-        public override void AddEdge(TEdge edge)
+        public override void AddEdge(Edge<TVertex> edge)
         {
             // TODO -> levantar execao caso edge seja null 
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);     
         }
         
-         private void RemoveEdgeUndirectedGraph(TEdge edge)
+         private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
          {
             matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = 0;
             matrix[vertex_index_map[edge.GetDestination()]][vertex_index_map[edge.GetSource()]] = 0;
          }
  
-         private void RemoveEdgeDirectedGraph(TEdge edge)
+         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
          {
             matrix[vertex_index_map[edge.GetSource()]][vertex_index_map[edge.GetDestination()]] = 0;
          }       
 
-        public override void RemoveEdge(TEdge edge)
+        public override void RemoveEdge(Edge<TVertex> edge)
         {            
             // TODO -> levantar execao caso edge seja null 
             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);

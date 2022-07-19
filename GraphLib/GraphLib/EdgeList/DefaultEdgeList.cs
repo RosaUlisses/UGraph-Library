@@ -7,10 +7,9 @@ using GraphLib.Exceptions;
 
 namespace GraphLib.EdgeList
 {
-    public class EdgeList<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
+    public class EdgeList<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
         where TGraphType : GraphType
-        where TEdge : IEdge<TVertex>
     {
         private readonly Type graphType;
         private List<TVertex> vertex_list;
@@ -47,36 +46,36 @@ namespace GraphLib.EdgeList
             }           
         }
 
-        private void AddEdgeDirectedGraph(TEdge edge)
+        private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
             edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
         }
 
-        private void AddEdgeUndirectedGraph(TEdge edge)
+        private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
             edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
             edge_list.Add(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWheight()));
         }
 
-        public override void AddEdge(TEdge edge)
+        public override void AddEdge(Edge<TVertex> edge)
         {
             // TODO -> Levantar execao se os vertices nao existirem no grafo
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);
         }
         
-        private void RemoveEdgeDirectedGraph(TEdge edge)
+        private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
             edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
         }
 
-        private void RemoveEdgeUndirectedGraph(TEdge edge)
+        private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
         {
             edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWheight()));
             edge_list.Remove(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWheight()));
         }
 
-        public override void RemoveEdge(TEdge edge)
+        public override void RemoveEdge(Edge<TVertex> edge)
         {
             // TODO -> levantar execao se a aresta nao existir no grafo
             // Considerar o peso na hora de remover a aresta ???

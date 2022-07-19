@@ -8,9 +8,8 @@ using GraphLib.Exceptions;
 
 namespace GraphLib.IncidenceMatrix
 {
-    public class IncidenceMatrix<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
+    public class IncidenceMatrix<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
-        where TEdge : IEdge<TVertex>
         where TGraphType : GraphType
     {
         private readonly Type graphType;
@@ -19,7 +18,7 @@ namespace GraphLib.IncidenceMatrix
         private Stack<int> empty_edge_indexes;
         private Dictionary<TVertex, int> vertex_index_map;
         private Dictionary<int, TVertex> index_vertex_map;
-        private Dictionary<TEdge, int> index_edge_map;
+        private Dictionary<Edge<TVertex>, int> index_edge_map;
         public int Count { get; private set; }
 
         public IncidenceMatrix()
@@ -30,7 +29,7 @@ namespace GraphLib.IncidenceMatrix
             empty_edge_indexes = new Stack<int>();
             vertex_index_map = new Dictionary<TVertex, int>();
             index_vertex_map = new Dictionary<int, TVertex>();
-            index_edge_map = new Dictionary<TEdge, int>();
+            index_edge_map = new Dictionary<Edge<TVertex>, int>();
         } 
         
         public override void AddVertex(TVertex vertex)
@@ -86,7 +85,7 @@ namespace GraphLib.IncidenceMatrix
             Count--;
         }
         
-        private void AddEdgeUndirectedGraph(TEdge edge)
+        private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
              if (empty_edge_indexes.Count == 0)
              {
@@ -105,7 +104,7 @@ namespace GraphLib.IncidenceMatrix
              }                   
         }
         
-        private void AddEdgeDirectedGraph(TEdge edge)
+        private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
             if (empty_edge_indexes.Count == 0)
             {
@@ -124,14 +123,14 @@ namespace GraphLib.IncidenceMatrix
             }
         }
         
-        public override void AddEdge(TEdge edge)
+        public override void AddEdge(Edge<TVertex> edge)
         {
             // TODO -> levantar execao caso edge seja null 
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);     
         }
         
-        public override void RemoveEdge(TEdge edge)
+        public override void RemoveEdge(Edge<TVertex> edge)
         {            
               int index = index_edge_map[edge];
               int counter = 0;

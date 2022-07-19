@@ -10,9 +10,8 @@ using GraphLib.Propertys;
 
 namespace GraphLib.AdjacencyList
 {
-    public class AdjacencyList<TVertex, TEdge, TGraphType> : Graph<TVertex, TEdge, TGraphType>
+    public class AdjacencyList<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
-        where TEdge : IEdge<TVertex>
         where TGraphType : GraphType
     {
         private readonly Type graphType;
@@ -49,36 +48,36 @@ namespace GraphLib.AdjacencyList
             }
         }
 
-        private void AddEdgeUndirectedGraph(TEdge edge)
+        private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
             adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWheight())); 
             adjacency_lists[edge.GetDestination()].Add(new(edge.GetSource(), edge.GetWheight()));
         }
         
-        private void AddEdgeEdgeDirectedGraph(TEdge edge)
+        private void AddEdgeEdgeDirectedGraph(Edge<TVertex> edge)
         {
             adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWheight())); 
         }
         
-        public override void AddEdge(TEdge edge)
+        public override void AddEdge(Edge<TVertex> edge)
         {
             // TODO -> levantar execao caso edge seja null 
             if (graphType == typeof(Directed)) AddEdgeEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);
         }
 
-        private void RemoveEdgeUndirectedGraph(TEdge edge)
+        private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
         {
             adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWheight())); 
             adjacency_lists[edge.GetDestination()].Remove(new(edge.GetSource(), edge.GetWheight()));
         }
 
-        private void RemoveEdgeDirectedGraph(TEdge edge)
+        private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
             adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWheight())); 
         }
         
-        public override void RemoveEdge(TEdge edge)
+        public override void RemoveEdge(Edge<TVertex> edge)
         {
             try
             {

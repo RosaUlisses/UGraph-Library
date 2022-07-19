@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphLib", "GraphLib\GraphLib.csproj", "{EFA43A64-8B0C-4FB2-B9E3-E16103BB13D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphLib", "GraphLib\GraphLib.csproj", "{EFA43A64-8B0C-4FB2-B9E3-E16103BB13D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{748DD313-94BF-4D4C-A607-4DB6D69D7BD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EFA43A64-8B0C-4FB2-B9E3-E16103BB13D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFA43A64-8B0C-4FB2-B9E3-E16103BB13D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFA43A64-8B0C-4FB2-B9E3-E16103BB13D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{748DD313-94BF-4D4C-A607-4DB6D69D7BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{748DD313-94BF-4D4C-A607-4DB6D69D7BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{748DD313-94BF-4D4C-A607-4DB6D69D7BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{748DD313-94BF-4D4C-A607-4DB6D69D7BD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
