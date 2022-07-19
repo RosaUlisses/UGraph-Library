@@ -17,6 +17,15 @@
     <Compile Remove="Edge\WheightedEdgeInterface.cs" />
     <Compile Remove="Edge\WheightedOutEdge.cs" />
     <Compile Remove="Propertys.cs" />
+    <Compile Remove="Vertex\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Vertex\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Vertex\**" />
   </ItemGroup>
 
 </Project>

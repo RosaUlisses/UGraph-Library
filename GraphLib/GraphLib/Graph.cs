@@ -83,5 +83,30 @@ namespace GraphLib
 
              return path.ToList();
         }
+
+        public List<TVertex> DepthFirstSearch(TVertex source)
+        {
+            List<TVertex> path  = new List<TVertex>();
+            Stack<TVertex> stack = new Stack<TVertex>();
+            HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
+            
+            stack.Push(source);
+
+            while (stack.Count != 0)
+            {
+                TVertex current = stack.Pop();
+                visitedVertexes.Add(current);
+                IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(current);
+                while (neighbours.MoveNext())
+                {
+                    if (!visitedVertexes.Contains(neighbours.Current.Destination))
+                    {
+                        stack.Push(neighbours.Current.Destination);
+                    }
+                }
+                path.Add(current);
+            }
+            return path;
+        }
     }
 }
