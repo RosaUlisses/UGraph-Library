@@ -10,11 +10,15 @@ namespace GraphLib.Edge
         
         public OutEdge(TVertex vertex, double weight)
         {
-            // TODO -> levantar execao caso edge seja null
             Destination = vertex; 
             Weight = weight;
         }
         
+        public OutEdge(TVertex vertex)
+        {
+            Destination = vertex; 
+            Weight = 1;
+        }
         public override bool Equals(object? obj)
         {
             if (obj == null  || GetType().Equals(obj.GetType()))
@@ -25,7 +29,6 @@ namespace GraphLib.Edge
             return Destination.Equals(outEdge.Destination) && Weight == outEdge.Weight;
         }
 
-        // TODO -> fazer uma funcao hash boa
         public override int GetHashCode()
         {
             return base.GetHashCode();

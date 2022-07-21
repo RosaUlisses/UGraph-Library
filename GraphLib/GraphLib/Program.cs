@@ -7,3 +7,5 @@ using GraphLib.Edge;
 using GraphLib.Propertys;
 using GraphLib.AdjacencyList;
 using GraphLib.AdjacencyMatrix;
+
+Console.WriteLine("oi");

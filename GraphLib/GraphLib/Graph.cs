@@ -15,6 +15,7 @@ namespace GraphLib
         public abstract void RemoveVertex(TVertex vertex);
         public abstract void AddEdge(Edge<TVertex> edge);
         public abstract void RemoveEdge(Edge<TVertex> edge);
+        public abstract bool AreConected(TVertex a, TVertex b);
         public abstract int GetCount();
         public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
 

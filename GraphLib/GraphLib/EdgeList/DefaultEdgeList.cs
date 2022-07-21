@@ -12,20 +12,20 @@ namespace GraphLib.EdgeList
         where TGraphType : GraphType
     {
         private readonly Type graphType;
-        private List<TVertex> vertex_list;
+        private HashSet<TVertex> vertexes;
         private List<Edge<TVertex>> edge_list;
-        public int Count { get { return vertex_list.Count; } }
+        public int Count { get { return vertexes.Count; } }
 
         public EdgeList()
         {
             graphType = typeof(TGraphType);
-            vertex_list = new List<TVertex>();
+            vertexes = new HashSet<TVertex>();
             edge_list = new List<Edge<TVertex>>();
         }
 
         public override void AddVertex(TVertex vertex)
         {
-            vertex_list.Add(vertex);
+            vertexes.Add(vertex);
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -33,7 +33,7 @@ namespace GraphLib.EdgeList
             bool result;
             try
             {
-                result = vertex_list.Remove(vertex);
+                result = vertexes.Remove(vertex);
             }
             catch (ArgumentNullException e)
             {
@@ -59,7 +59,14 @@ namespace GraphLib.EdgeList
 
         public override void AddEdge(Edge<TVertex> edge)
         {
-            // TODO -> Levantar execao se os vertices nao existirem no grafo
+            if (edge.Source == null || edge.Destination == null)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+            if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
+            {
+                throw new InvalidEdgeException($"Edge {edge} is not valid");
+            }
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);
         }
@@ -77,13 +84,33 @@ namespace GraphLib.EdgeList
 
         public override void RemoveEdge(Edge<TVertex> edge)
         {
-            // TODO -> levantar execao se a aresta nao existir no grafo
-            // Considerar o peso na hora de remover a aresta ???
+             if (edge.Source == null || edge.Destination == null)
+             {
+                 throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+             }
+             if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
+             {
+                 throw new InvalidEdgeException($"Edge {edge} is not valid");
+             }   
              if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
              else RemoveEdgeUndirectedGraph(edge);
-                
         }
 
+        public override bool AreConected(TVertex a, TVertex b)
+        {
+            if (a == null || b == null)
+            {
+                throw new InvalidEdgeException("A vertex can not be null");
+            }
+            if (!vertexes.Contains(a) || !vertexes.Contains(b))
+            {
+                throw new InvalidEdgeException("Invalid vertexes");
+            }
+
+            // Arrumar isso, ta horrivel
+            return edge_list.Where(edge => edge.Source.Equals(a) && edge.Destination.Equals(b)).ToList().Count != 0;
+        }
+        
         public override int GetCount()
         {
             return Count;
@@ -94,7 +121,7 @@ namespace GraphLib.EdgeList
             List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
 
             if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
-            else if(vertex_list.IndexOf(vertex) == -1) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             
 
             foreach (Edge<TVertex> edge in edge_list)

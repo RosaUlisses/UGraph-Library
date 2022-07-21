@@ -101,7 +101,7 @@ namespace GraphLib.AdjacencyMatrix
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+                throw new InvalidEdgeException($"Edge {edge} is not valid");
             }
         }
         
@@ -132,7 +132,23 @@ namespace GraphLib.AdjacencyMatrix
                 throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
             }
         }
-        
+
+        public override bool AreConected(TVertex a, TVertex b)
+        {
+            try
+            {
+                return matrix[vertex_index_map[a]][vertex_index_map[b]] != 0;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException("Invalid vertexes");
+            }
+        }
+
         public override int GetCount()
         {
             return Count;

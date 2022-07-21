@@ -73,7 +73,7 @@ namespace GraphLib.AdjacencyList
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+                throw new InvalidEdgeException($"Edge {edge} is not valid");
             }
         }
 
@@ -102,6 +102,22 @@ namespace GraphLib.AdjacencyList
             catch (KeyNotFoundException e)
             {
                 throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+            }
+        }
+        
+        public override bool AreConected(TVertex a, TVertex b)
+        {
+            try
+            {
+                return adjacency_lists[a].Contains(new OutEdge<TVertex>(b));
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidEdgeException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException("Invalid vertexes");
             }
         }
         
