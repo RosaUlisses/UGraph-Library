@@ -168,38 +168,14 @@ namespace GraphLib.IncidenceMatrix
             }
         }
 
+        public override bool Contains(TVertex vertex)
+        {
+            return vertex_index_map.ContainsKey(vertex);
+        }
+
         public override bool AreConected(TVertex a, TVertex b)
         {
-            try
-            {
-                int index = vertex_index_map[a];
-                for (int i = 0; i < matrix[index].Count; i++)
-                {
-                    if (matrix[index][i] != EMPTY_EDGE && matrix[index][i] != null)
-                    {
-                        for (int j = 0; j < matrix.Count; j++)
-                        {
-                            if (matrix[index][j] != EMPTY_EDGE && matrix[index][j] != null)
-                            {
-                                if (index_vertex_map[j].Equals(b))
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return false;
-            }
-            catch (ArgumentNullException e)
-            {
-                throw new InvalidEdgeException("A vertex can not be null");
-            }
-            catch (KeyNotFoundException e)
-            {
-                throw new InvalidEdgeException("Invalid vertexes");
-            }
+            return index_edge_map.ContainsKey(new Edge<TVertex>(a, b));
         }
         
         public override int GetCount()

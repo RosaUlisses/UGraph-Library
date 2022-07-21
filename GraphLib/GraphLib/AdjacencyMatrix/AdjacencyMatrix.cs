@@ -133,6 +133,11 @@ namespace GraphLib.AdjacencyMatrix
             }
         }
 
+        public override bool Contains(TVertex vertex)
+        {
+            return vertex_index_map.ContainsKey(vertex);
+        }
+
         public override bool AreConected(TVertex a, TVertex b)
         {
             try

@@ -98,6 +98,12 @@ namespace GraphLib.EdgeList
             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
             else RemoveEdgeUndirectedGraph(edge);
         }
+
+        public override bool Contains(TVertex vertex)
+        {
+            return vertexes.Contains(vertex);
+        }
+
         public override bool AreConected(TVertex a, TVertex b)
         {
             if (a == null || b == null)

@@ -110,7 +110,12 @@ namespace GraphLib.EdgeList
             // Arrumar isso, ta horrivel
             return edge_list.Where(edge => edge.Source.Equals(a) && edge.Destination.Equals(b)).ToList().Count != 0;
         }
-        
+
+        public override bool Contains(TVertex vertex)
+        {
+            return vertexes.Contains(vertex);
+        }
+
         public override int GetCount()
         {
             return Count;

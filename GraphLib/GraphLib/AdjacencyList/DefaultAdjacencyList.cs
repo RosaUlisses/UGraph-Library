@@ -105,6 +105,11 @@ namespace GraphLib.AdjacencyList
             }
         }
         
+        public override bool Contains(TVertex vertex)
+        {
+            return adjacency_lists.ContainsKey(vertex);
+        }
+        
         public override bool AreConected(TVertex a, TVertex b)
         {
             try
