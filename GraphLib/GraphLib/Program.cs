@@ -6,6 +6,11 @@ using GraphLib;
 using GraphLib.Edge;
 using GraphLib.Propertys;
 using GraphLib.AdjacencyList;
+using GraphLib.EdgeList;
 using GraphLib.AdjacencyMatrix;
 
-Console.WriteLine("oi");
+Graph<int, Directed> directedEdgeList = new AdjacencyMatrix<int, Directed>();
+Graph<int, Undirected> undirectedEdgeList = new AdjacencyMatrix<int, Undirected>();
+
+directedEdgeList.AddVertex(10);
+directedEdgeList.RemoveVertex(10);

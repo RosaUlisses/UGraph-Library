@@ -37,8 +37,9 @@ namespace GraphLib.IncidenceMatrix
             if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
             if (empty_vertex_indexes.Count == 0)
             {
-                vertex_index_map.Add(vertex, matrix.Count - 1);
-                index_vertex_map.Add(matrix.Count - 1, vertex);
+                vertex_index_map.Add(vertex, matrix.Count);
+                index_vertex_map.Add(matrix.Count, vertex);
+                matrix.Add(new List<double?>());
             }
             else
             {
@@ -51,10 +52,28 @@ namespace GraphLib.IncidenceMatrix
 
         public override void RemoveVertex(TVertex vertex)
         {
-            int index;
             try
             {
-                index = vertex_index_map[vertex];
+                int index = vertex_index_map[vertex];
+                 empty_vertex_indexes.Push(index);
+                 for (int i = 0; i < matrix[index].Count; i++)
+                 {
+                     if (matrix[index][i] != EMPTY_EDGE)
+                     {
+                         for (int j = 0; j < matrix.Count; j++)
+                         {
+                             if (matrix[j][i] != EMPTY_EDGE)
+                             {
+                                 matrix[j][i] = EMPTY_EDGE;
+                                 break;
+                             }
+                         }
+                     }
+                     matrix[index][i] = EMPTY_EDGE;
+                 }
+                 vertex_index_map.Remove(vertex);
+                 index_vertex_map.Remove(index);
+                 Count--;               
             }
             catch (ArgumentNullException e)
             {
@@ -64,26 +83,6 @@ namespace GraphLib.IncidenceMatrix
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             }
-            
-            empty_vertex_indexes.Push(index);
-            for (int i = 0; i < matrix[index].Count; i++)
-            {
-                if (matrix[index][i] != EMPTY_EDGE)
-                {
-                    for (int j = 0; j < matrix.Count; j++)
-                    {
-                        if (matrix[j][i] != EMPTY_EDGE)
-                        {
-                            matrix[j][i] = EMPTY_EDGE;
-                            break;
-                        }
-                    }
-                }
-                matrix[index][i] = EMPTY_EDGE;
-            }
-            vertex_index_map.Remove(vertex);
-            index_vertex_map.Remove(index);
-            Count--;
         }
         
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
