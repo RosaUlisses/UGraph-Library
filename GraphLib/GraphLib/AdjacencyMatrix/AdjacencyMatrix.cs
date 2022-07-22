@@ -33,7 +33,7 @@ namespace GraphLib.AdjacencyMatrix
             if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
             if (empty_indexes.Count == 0)
             {
-                matrix.Add(new List<double>(Count + 1));
+                matrix.Add(new List<double>(new double[Count + 1]));
                 foreach (List<double> list in matrix)
                 {
                    list.Add(0); 
@@ -60,9 +60,10 @@ namespace GraphLib.AdjacencyMatrix
                 {
                     matrix[index][i] = EMPTY_EDGE;
                 }
-                for (int i = 0; i < matrix.Count; i++)
+
+                foreach (List<double> list in matrix)
                 {
-                    matrix[i][index] = EMPTY_EDGE;
+                    list[index] = EMPTY_EDGE;
                 }
                 vertex_index_map.Remove(vertex);
                 index_vertex_map.Remove(index);

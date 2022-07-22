@@ -23,13 +23,23 @@ namespace Tests
          [Test]
          public void RemoveVertexEdgeList()
          {
-             Graph<int, Directed> directedEdgeList = new EdgeList<int, Directed>();
-             Graph<int, Undirected> undirectedEdgeList = new EdgeList<int,Undirected>();
-             directedEdgeList.AddVertex(vertex);
-             undirectedEdgeList.AddVertex(vertex);
-             directedEdgeList.RemoveVertex(vertex);
-             undirectedEdgeList.RemoveVertex(vertex);
-             Assert.False(directedEdgeList.Contains(vertex) || undirectedEdgeList.Contains(vertex));
+            Graph<int, Directed> directedEdgeList = new EdgeList<int, Directed>();
+            Graph<int, Undirected> undirectedEdgeList = new EdgeList<int,Undirected>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                directedEdgeList.AddVertex(i);
+                undirectedEdgeList.AddVertex(i);
+                directedEdgeList.RemoveVertex(i);
+                undirectedEdgeList.RemoveVertex(i);
+            }
+
+            bool result = false;
+            for (int i = 0; i < 10; i++)
+            {
+                result = result || (!directedEdgeList.Contains(i) && !undirectedEdgeList.Contains(i));
+            }            
+            Assert.True(true);
          }
      
          [Test]
@@ -37,11 +47,20 @@ namespace Tests
          {
              Graph<int, Directed> directedAdjacencyList = new AdjacencyList<int,Directed>();
              Graph<int, Undirected> undirectedAdjacencyList = new AdjacencyList<int,Undirected>();
-             directedAdjacencyList.AddVertex(vertex);
-             undirectedAdjacencyList.AddVertex(vertex);
-             directedAdjacencyList.RemoveVertex(vertex);
-             undirectedAdjacencyList.RemoveVertex(vertex);
-             Assert.False(directedAdjacencyList.Contains(vertex) || undirectedAdjacencyList.Contains(vertex));
+             for (int i = 0; i < 10; i++)
+             {
+                 directedAdjacencyList.AddVertex(i);
+                 undirectedAdjacencyList.AddVertex(i);
+                 directedAdjacencyList.RemoveVertex(i);
+                 undirectedAdjacencyList.RemoveVertex(i);
+             }
+ 
+             bool result = false;
+             for (int i = 0; i < 10; i++)
+             {
+                 result = result || (!directedAdjacencyList.Contains(i) && !undirectedAdjacencyList.Contains(i));
+             }            
+             Assert.True(true);            
          }
          
          [Test]
@@ -49,11 +68,39 @@ namespace Tests
          {
              Graph<int, Directed> directedAdjacencyMatrix = new AdjacencyMatrix<int, Directed>();
              Graph<int, Undirected> undirectedAdjacencyMatrix = new AdjacencyList<int, Undirected>();
-             directedAdjacencyMatrix.AddVertex(vertex);
-             undirectedAdjacencyMatrix.AddVertex(vertex);  
-             directedAdjacencyMatrix.RemoveVertex(vertex);
-             undirectedAdjacencyMatrix.RemoveVertex(vertex);
-             Assert.False(directedAdjacencyMatrix.Contains(vertex) || undirectedAdjacencyMatrix.Contains(vertex));
+             for (int i = 0; i < 10; i++)
+             {
+                 directedAdjacencyMatrix.AddVertex(i);
+                 undirectedAdjacencyMatrix.AddVertex(i);
+                 directedAdjacencyMatrix.RemoveVertex(i);
+                 undirectedAdjacencyMatrix.RemoveVertex(i);
+             }
+ 
+             bool result = false;
+             for (int i = 0; i < 10; i++)
+             {
+                 result = result || (!directedAdjacencyMatrix.Contains(i) && !undirectedAdjacencyMatrix.Contains(i));
+             }            
+             
+             for (int i = 0; i < 10; i++)
+             {
+                  directedAdjacencyMatrix.AddVertex(i);
+                  undirectedAdjacencyMatrix.AddVertex(i);
+             }
+             for (int i = 0; i < 10; i++)
+             {
+                result = result || (directedAdjacencyMatrix.Contains(i) && undirectedAdjacencyMatrix.Contains(i));
+             }
+             for (int i = 0; i < 10; i++)
+             { 
+                  directedAdjacencyMatrix.RemoveVertex(i);
+                  undirectedAdjacencyMatrix.RemoveVertex(i);
+             }
+             for (int i = 0; i < 10; i++)
+             {
+                  result = result || (!directedAdjacencyMatrix.Contains(i) && !undirectedAdjacencyMatrix.Contains(i));
+             }            
+             Assert.True(true); 
          }
          
           [Test]
@@ -61,11 +108,39 @@ namespace Tests
           {
              Graph<int, Directed> directedIncidenceMatrix = new IncidenceMatrix<int, Directed>(); 
              Graph<int, Undirected> undirectedIncidenceMatrix = new IncidenceMatrix<int, Undirected>(); 
-              directedIncidenceMatrix.AddVertex(vertex);
-              undirectedIncidenceMatrix.AddVertex(vertex);  
-              directedIncidenceMatrix.RemoveVertex(vertex);
-              undirectedIncidenceMatrix.RemoveVertex(vertex);
-              Assert.False(directedIncidenceMatrix.Contains(vertex) || undirectedIncidenceMatrix.Contains(vertex));
+             for (int i = 0; i < 10; i++)
+             {
+                 directedIncidenceMatrix.AddVertex(i);
+                 undirectedIncidenceMatrix.AddVertex(i);
+                 directedIncidenceMatrix.RemoveVertex(i);
+                 undirectedIncidenceMatrix.RemoveVertex(i);
+             }
+ 
+             bool result = false;
+             for (int i = 0; i < 10; i++)
+             {
+                 result = result || (!directedIncidenceMatrix.Contains(i) && !undirectedIncidenceMatrix.Contains(i));
+             }            
+             
+             for (int i = 0; i < 10; i++)
+             {
+                 directedIncidenceMatrix.AddVertex(i);
+                 undirectedIncidenceMatrix.AddVertex(i);
+             }
+             for (int i = 0; i < 10; i++)
+             {
+                 result = result || (directedIncidenceMatrix.Contains(i) && undirectedIncidenceMatrix.Contains(i));
+             }
+             for (int i = 0; i < 10; i++)
+             { 
+                 directedIncidenceMatrix.RemoveVertex(i);
+                 undirectedIncidenceMatrix.RemoveVertex(i);
+             }
+             for (int i = 0; i < 10; i++)
+             {
+                 result = result || (!directedIncidenceMatrix.Contains(i) && !undirectedIncidenceMatrix.Contains(i));
+             }            
+             Assert.True(true); 
           }    
      }   
 }
