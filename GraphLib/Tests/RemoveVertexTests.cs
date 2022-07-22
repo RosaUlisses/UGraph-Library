@@ -12,14 +12,6 @@ namespace Tests
 {
      public class RemoveVertexTests
      { 
-         Graph<int, Directed> directedEdgeList = new EdgeList<int, Directed>();
-         Graph<int, Undirected> undirectedEdgeList = new EdgeList<int,Undirected>();
-         Graph<int, Directed> directedAdjacencyMatrix = new AdjacencyMatrix<int, Directed>();
-         Graph<int, Undirected> undirectedAdjacencyMatrix = new AdjacencyList<int, Undirected>();
-         Graph<int, Directed> directedIncidenceMatrix = new IncidenceMatrix<int, Directed>(); 
-         Graph<int, Undirected> undirectedIncidenceMatrix = new IncidenceMatrix<int, Undirected>(); 
-         Graph<int, Directed> directedAdjacencyList = new AdjacencyList<int,Directed>();
-         Graph<int, Undirected> undirectedAdjacencyList = new AdjacencyList<int,Undirected>();
      
          int vertex = 10;
          
@@ -31,6 +23,8 @@ namespace Tests
          [Test]
          public void RemoveVertexEdgeList()
          {
+             Graph<int, Directed> directedEdgeList = new EdgeList<int, Directed>();
+             Graph<int, Undirected> undirectedEdgeList = new EdgeList<int,Undirected>();
              directedEdgeList.AddVertex(vertex);
              undirectedEdgeList.AddVertex(vertex);
              directedEdgeList.RemoveVertex(vertex);
@@ -41,6 +35,8 @@ namespace Tests
          [Test]
          public void RemoveVertexAdjacencyList()
          {
+             Graph<int, Directed> directedAdjacencyList = new AdjacencyList<int,Directed>();
+             Graph<int, Undirected> undirectedAdjacencyList = new AdjacencyList<int,Undirected>();
              directedAdjacencyList.AddVertex(vertex);
              undirectedAdjacencyList.AddVertex(vertex);
              directedAdjacencyList.RemoveVertex(vertex);
@@ -51,6 +47,8 @@ namespace Tests
          [Test]
          public void RemoveVertexAdjacencyMatrix()
          {
+             Graph<int, Directed> directedAdjacencyMatrix = new AdjacencyMatrix<int, Directed>();
+             Graph<int, Undirected> undirectedAdjacencyMatrix = new AdjacencyList<int, Undirected>();
              directedAdjacencyMatrix.AddVertex(vertex);
              undirectedAdjacencyMatrix.AddVertex(vertex);  
              directedAdjacencyMatrix.RemoveVertex(vertex);
@@ -61,6 +59,8 @@ namespace Tests
           [Test]
           public void RemoveVertexIncidenceMatrix()
           {
+             Graph<int, Directed> directedIncidenceMatrix = new IncidenceMatrix<int, Directed>(); 
+             Graph<int, Undirected> undirectedIncidenceMatrix = new IncidenceMatrix<int, Undirected>(); 
               directedIncidenceMatrix.AddVertex(vertex);
               undirectedIncidenceMatrix.AddVertex(vertex);  
               directedIncidenceMatrix.RemoveVertex(vertex);

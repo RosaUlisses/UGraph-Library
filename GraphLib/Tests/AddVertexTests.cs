@@ -1,4 +1,3 @@
-/*
 using NUnit.Framework;
 using GraphLib;
 using GraphLib.Edge;
@@ -12,14 +11,6 @@ namespace Tests
 {
     public class AddVertexTests 
     {
-        Graph<int, Directed> directedEdgeList = new EdgeList<int, Directed>();
-        Graph<int, Undirected> undirectedEdgeList = new EdgeList<int,Undirected>();
-        Graph<int, Directed> directedAdjacencyMatrix = new AdjacencyMatrix<int, Directed>();
-        Graph<int, Undirected> undirectedAdjacencyMatrix = new AdjacencyList<int, Undirected>();
-        Graph<int, Directed> directedIncidenceMatrix = new IncidenceMatrix<int, Directed>(); 
-        Graph<int, Undirected> undirectedIncidenceMatrix = new IncidenceMatrix<int, Undirected>(); 
-        Graph<int, Directed> directedAdjacencyList = new AdjacencyList<int,Directed>();
-        Graph<int, Undirected> undirectedAdjacencyList = new AdjacencyList<int,Undirected>();
 
         int vertex = 10;
         
@@ -31,34 +22,78 @@ namespace Tests
         [Test]
         public void AddVertexEdgeList()
         {
-            directedEdgeList.AddVertex(vertex);
-            undirectedEdgeList.AddVertex(vertex);
-            Assert.True(directedEdgeList.Contains(vertex) && undirectedEdgeList.Contains(vertex));
+            Graph<int, Directed> directedEdgeList = new EdgeList<int, Directed>();
+            Graph<int, Undirected> undirectedEdgeList = new EdgeList<int,Undirected>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                directedEdgeList.AddVertex(i);
+                undirectedEdgeList.AddVertex(i);
+            }
+
+            bool result = false;
+            for (int i = 0; i < 10; i++)
+            {
+                result = result || (directedEdgeList.Contains(i) && undirectedEdgeList.Contains(i));
+            }
+            Assert.True(result);
         }
 
         [Test]
         public void AddVertexAdjacencyList()
         {
-            directedAdjacencyList.AddVertex(vertex);
-            undirectedAdjacencyList.AddVertex(vertex);
-            Assert.True(directedAdjacencyList.Contains(vertex) && undirectedAdjacencyList.Contains(vertex));
+            Graph<int, Directed> directedAdjacencyList = new AdjacencyList<int,Directed>();
+            Graph<int, Undirected> undirectedAdjacencyList = new AdjacencyList<int,Undirected>();
+            for (int i = 0; i < 10; i++)
+            {
+                directedAdjacencyList.AddVertex(i);
+                undirectedAdjacencyList.AddVertex(i);
+            }
+
+            bool result = false;
+            for (int i = 0; i < 10; i++)
+            {
+                result = result || (directedAdjacencyList.Contains(i) && undirectedAdjacencyList.Contains(i));
+            }
+            Assert.True(result);
         }
 
         [Test]
         public void AddVertexAdjacencyMatrix()
         {
-            directedAdjacencyMatrix.AddVertex(vertex);
-            undirectedAdjacencyMatrix.AddVertex(vertex);
-            Assert.True(directedAdjacencyMatrix.Contains(vertex) && undirectedAdjacencyMatrix.Contains(vertex));
+            Graph<int, Directed> directedAdjacencyMatrix = new AdjacencyMatrix<int, Directed>();
+            Graph<int, Undirected> undirectedAdjacencyMatrix = new AdjacencyList<int, Undirected>();
+            for (int i = 0; i < 10; i++)
+            {
+                directedAdjacencyMatrix.AddVertex(i);
+                undirectedAdjacencyMatrix.AddVertex(i);
+            }
+
+            bool result = false;
+            for (int i = 0; i < 10; i++)
+            {
+                result = result || (directedAdjacencyMatrix.Contains(i) && undirectedAdjacencyMatrix.Contains(i));
+            }
+            Assert.True(result);
         }
         
          [Test]
          public void AddVertexIncidenceMatrix()
          {
-             directedIncidenceMatrix.AddVertex(vertex);
-             undirectedIncidenceMatrix.AddVertex(vertex);
-             Assert.True(directedIncidenceMatrix.Contains(vertex) && undirectedIncidenceMatrix.Contains(vertex));
+            Graph<int, Directed> directedIncidenceMatrix = new IncidenceMatrix<int, Directed>(); 
+            Graph<int, Undirected> undirectedIncidenceMatrix = new IncidenceMatrix<int, Undirected>(); 
+            for (int i = 0; i < 10; i++)
+            {
+                directedIncidenceMatrix.AddVertex(i);
+                undirectedIncidenceMatrix.AddVertex(i);
+            }
+
+            bool result = false;
+            for (int i = 0; i < 10; i++)
+            {
+                result = result || (directedIncidenceMatrix.Contains(i) && undirectedIncidenceMatrix.Contains(i));
+            }
+            Assert.True(result);
          }       
     }
 }
-*/
