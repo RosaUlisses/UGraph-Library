@@ -9,8 +9,21 @@ using GraphLib.AdjacencyList;
 using GraphLib.EdgeList;
 using GraphLib.AdjacencyMatrix;
 
-Graph<int, Directed> directedEdgeList = new AdjacencyMatrix<int, Directed>();
-Graph<int, Undirected> undirectedEdgeList = new AdjacencyMatrix<int, Undirected>();
 
-directedEdgeList.AddVertex(10);
-directedEdgeList.RemoveVertex(10);
+Graph<int, Directed> g = new AdjacencyList<int, Directed>();
+
+g.AddVertex(10);
+g.AddVertex(11);
+g.AddVertex(12);
+
+foreach (var vertx in g)
+{
+    Console.WriteLine(vertx);
+}
+
+foreach (var vertx in g)
+{
+    Console.WriteLine(vertx);
+}
+
+

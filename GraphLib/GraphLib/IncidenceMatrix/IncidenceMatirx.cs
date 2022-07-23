@@ -32,6 +32,21 @@ namespace GraphLib.IncidenceMatrix
             index_edge_map = new Dictionary<Edge<TVertex>, int>();
         } 
         
+        public override bool MoveIterator()
+        {
+            throw new NotImplementedException();
+        }       
+        
+        public override TVertex GetIteratorValue()
+        { 
+            throw new NotImplementedException();
+        }
+        
+        public override void ResetIterator()
+        {
+            throw new NotImplementedException();
+        }
+        
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException("A vertex can not be null");

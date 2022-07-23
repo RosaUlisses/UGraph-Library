@@ -1,16 +1,44 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GraphLib.Edge;
 using GraphLib.Propertys;
 
 namespace GraphLib
 {
-    public abstract class Graph<TVertex, TGraphType>
+    public abstract class Graph<TVertex, TGraphType> : IEnumerator, IEnumerable
         where TVertex : IComparable<TVertex>
         where TGraphType : GraphType
     {
-        protected const  double EMPTY_EDGE = 0; 
+        
+        protected const  double EMPTY_EDGE = 0;
+
+        public bool MoveNext()
+        {
+            return MoveIterator();
+        }
+
+        public void Reset()
+        {
+            ResetIterator();
+        }
+
+        public object Current
+        {
+            get { return GetIteratorValue(); }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return (IEnumerator)this;
+        }
+
+        public abstract void ResetIterator();
+        public abstract bool MoveIterator();
+        public abstract TVertex GetIteratorValue();
+        
         public abstract void AddVertex(TVertex vertex);
         public abstract void RemoveVertex(TVertex vertex);
         public abstract void AddEdge(Edge<TVertex> edge);

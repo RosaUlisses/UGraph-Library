@@ -18,6 +18,7 @@
     <Compile Remove="Edge\WheightedOutEdge.cs" />
     <Compile Remove="Propertys.cs" />
     <Compile Remove="Vertex\**" />
+    <Compile Remove="teste.cs" />
   </ItemGroup>
 
   <ItemGroup>

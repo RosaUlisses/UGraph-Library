@@ -17,6 +17,8 @@ namespace GraphLib.AdjacencyMatrix
         private Stack<int> empty_indexes;
         private Dictionary<TVertex, int> vertex_index_map;
         private Dictionary<int, TVertex> index_vertex_map;
+
+        private int current_vertex; 
         public int Count { get; private set; }
 
         public AdjacencyMatrix()
@@ -26,7 +28,24 @@ namespace GraphLib.AdjacencyMatrix
             empty_indexes = new Stack<int>();
             vertex_index_map = new Dictionary<TVertex, int>();
             index_vertex_map = new Dictionary<int, TVertex>();
+            ResetIterator();
         } 
+        public override bool MoveIterator()
+        {
+            if(current_vertex == Count) ResetIterator();
+            current_vertex++;
+            return current_vertex < matrix.Count;
+        }       
+        
+        public override TVertex GetIteratorValue()
+        {
+            return index_vertex_map[current_vertex];
+        }
+
+        public override void ResetIterator()
+        {
+            current_vertex = -1;
+        }
         
         public override void AddVertex(TVertex vertex)
         {

@@ -17,17 +17,45 @@ namespace GraphLib.AdjacencyList
         where TMap : IDictionary<TVertex, TList>, new()
     {
         private readonly Type graphType;
-        // TMap ou IDictionary ??? (Redundancia ???)
         private IDictionary<TVertex, TList> adjacency_lists;
         
         public int Count { get { return adjacency_lists.Count; } }
 
+        private IEnumerator<TVertex> current_vertex;
+        private bool IsOccuringAIteration;
         public AdjacencyList()
         {
             graphType = typeof(TGraphType);
             adjacency_lists = new TMap();
+            IsOccuringAIteration = false;
+        }
+        
+        public override bool MoveIterator()
+        {
+            if (!IsOccuringAIteration)
+            {
+                ResetIterator();
+                IsOccuringAIteration = true;
+            }
+
+            if (!current_vertex.MoveNext())
+            {
+                IsOccuringAIteration = false;
+                return false;
+            }
+            return true;
         }
 
+        public override TVertex GetIteratorValue()
+        {
+            return current_vertex.Current;
+        }
+
+        public override void ResetIterator()
+        {
+            current_vertex = adjacency_lists.Keys.GetEnumerator();
+        } 
+        
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException("A vertex can not be null");

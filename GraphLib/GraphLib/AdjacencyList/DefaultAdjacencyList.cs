@@ -16,15 +16,44 @@ namespace GraphLib.AdjacencyList
     {
         private readonly Type graphType;
         private Dictionary<TVertex, List<OutEdge<TVertex>>> adjacency_lists;
-        
-        public int Count { get { return adjacency_lists.Count; } }
 
+        private IEnumerator<TVertex> current_vertex;
+        private bool IsOCcuringAIteration;
+        public int Count { get { return adjacency_lists.Count; } }
+        
         public AdjacencyList()
         {
             adjacency_lists = new Dictionary<TVertex, List<OutEdge<TVertex>>>();
             graphType = typeof(TGraphType);
+            IsOCcuringAIteration = false;
+        }
+        
+        public override bool MoveIterator()
+        {
+            if (!IsOCcuringAIteration)
+            {
+                ResetIterator();
+                IsOCcuringAIteration = true;
+            }
+
+            if (!current_vertex.MoveNext())
+            {
+                IsOCcuringAIteration = false;
+                return false;
+            }
+            return true;
         }
 
+        public override TVertex GetIteratorValue()
+        {
+            return current_vertex.Current;
+        }
+
+        public override void ResetIterator()
+        {
+            current_vertex = adjacency_lists.Keys.GetEnumerator();
+        }
+        
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException("A vertex can not be null");

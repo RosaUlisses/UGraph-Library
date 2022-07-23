@@ -22,7 +22,22 @@ namespace GraphLib.EdgeList
             vertexes = new HashSet<TVertex>();
             edge_list = new List<Edge<TVertex>>();
         }
-
+        
+        public override bool MoveIterator()
+        {
+            throw new NotImplementedException();
+        }        
+        
+        public override TVertex GetIteratorValue()
+        { 
+            throw new NotImplementedException();
+        }
+        
+        public override void ResetIterator()
+        {
+            throw new NotImplementedException();
+        }       
+         
         public override void AddVertex(TVertex vertex)
         {
             vertexes.Add(vertex);

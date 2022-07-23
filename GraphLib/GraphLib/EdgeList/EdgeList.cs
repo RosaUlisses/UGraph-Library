@@ -25,7 +25,21 @@ namespace GraphLib.EdgeList
             edge_list = new TEdgeList();
         }
         
-
+        public override bool MoveIterator()
+        {
+            throw new NotImplementedException();
+        }       
+        
+        public override TVertex GetIteratorValue()
+        { 
+            throw new NotImplementedException();
+        }       
+        
+        public override void ResetIterator()
+        {
+            throw new NotImplementedException();
+        }
+        
         public override void AddVertex(TVertex vertex)
         {
             vertexes.Add(vertex);
