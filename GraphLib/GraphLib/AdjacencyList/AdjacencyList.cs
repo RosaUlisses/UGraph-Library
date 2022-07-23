@@ -22,25 +22,23 @@ namespace GraphLib.AdjacencyList
         public int Count { get { return adjacency_lists.Count; } }
 
         private IEnumerator<TVertex> current_vertex;
-        private bool IsOccuringAIteration;
         public AdjacencyList()
         {
             graphType = typeof(TGraphType);
             adjacency_lists = new TMap();
-            IsOccuringAIteration = false;
+            current_vertex = null;
         }
         
         public override bool MoveIterator()
         {
-            if (!IsOccuringAIteration)
+            if (current_vertex is null)
             {
                 ResetIterator();
-                IsOccuringAIteration = true;
             }
 
             if (!current_vertex.MoveNext())
             {
-                IsOccuringAIteration = false;
+                current_vertex = null;
                 return false;
             }
             return true;
@@ -54,7 +52,7 @@ namespace GraphLib.AdjacencyList
         public override void ResetIterator()
         {
             current_vertex = adjacency_lists.Keys.GetEnumerator();
-        } 
+        }
         
         public override void AddVertex(TVertex vertex)
         {

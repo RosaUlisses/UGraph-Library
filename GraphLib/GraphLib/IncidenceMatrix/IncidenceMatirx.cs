@@ -21,6 +21,8 @@ namespace GraphLib.IncidenceMatrix
         private Dictionary<Edge<TVertex>, int> index_edge_map;
         public int Count { get; private set; }
 
+        private IEnumerator<TVertex> current_vertex;
+
         public IncidenceMatrix()
         {
             graphType = typeof(TGraphType);
@@ -30,21 +32,33 @@ namespace GraphLib.IncidenceMatrix
             vertex_index_map = new Dictionary<TVertex, int>();
             index_vertex_map = new Dictionary<int, TVertex>();
             index_edge_map = new Dictionary<Edge<TVertex>, int>();
+            current_vertex = null;
         } 
         
         public override bool MoveIterator()
         {
-            throw new NotImplementedException();
+            if (current_vertex is null)
+            {
+                ResetIterator();
+            }
+
+            if (!current_vertex.MoveNext())
+            {
+                current_vertex = null;
+                return false;
+            }
+
+            return true;
         }       
         
         public override TVertex GetIteratorValue()
-        { 
-            throw new NotImplementedException();
+        {
+            return current_vertex.Current;
         }
         
         public override void ResetIterator()
         {
-            throw new NotImplementedException();
+            current_vertex = vertex_index_map.Keys.GetEnumerator();
         }
         
         public override void AddVertex(TVertex vertex)

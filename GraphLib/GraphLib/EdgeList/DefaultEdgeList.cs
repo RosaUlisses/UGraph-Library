@@ -14,28 +14,43 @@ namespace GraphLib.EdgeList
         private readonly Type graphType;
         private HashSet<TVertex> vertexes;
         private List<Edge<TVertex>> edge_list;
+        
         public int Count { get { return vertexes.Count; } }
+
+        private IEnumerator<TVertex> current_vertex;
 
         public EdgeList()
         {
             graphType = typeof(TGraphType);
             vertexes = new HashSet<TVertex>();
             edge_list = new List<Edge<TVertex>>();
+            current_vertex = null;
         }
         
         public override bool MoveIterator()
         {
-            throw new NotImplementedException();
+            if (current_vertex is null)
+            {
+                ResetIterator();
+            }
+
+            if (!current_vertex.MoveNext())
+            {
+                current_vertex = null;
+                return false;
+            }
+
+            return true;
         }        
         
         public override TVertex GetIteratorValue()
-        { 
-            throw new NotImplementedException();
+        {
+            return current_vertex.Current;
         }
         
         public override void ResetIterator()
         {
-            throw new NotImplementedException();
+            current_vertex = vertexes.GetEnumerator();
         }       
          
         public override void AddVertex(TVertex vertex)

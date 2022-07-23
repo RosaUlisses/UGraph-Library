@@ -8,9 +8,10 @@ using GraphLib.Propertys;
 using GraphLib.AdjacencyList;
 using GraphLib.EdgeList;
 using GraphLib.AdjacencyMatrix;
+using GraphLib.IncidenceMatrix;
 
 
-Graph<int, Directed> g = new AdjacencyList<int, Directed>();
+Graph<int, Directed> g = new EdgeList<int, Directed>();
 
 g.AddVertex(10);
 g.AddVertex(11);
@@ -25,5 +26,7 @@ foreach (var vertx in g)
 {
     Console.WriteLine(vertx);
 }
+
+Console.WriteLine("oi");
 
 

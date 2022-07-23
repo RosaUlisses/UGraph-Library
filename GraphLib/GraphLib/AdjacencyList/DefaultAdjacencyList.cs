@@ -18,27 +18,25 @@ namespace GraphLib.AdjacencyList
         private Dictionary<TVertex, List<OutEdge<TVertex>>> adjacency_lists;
 
         private IEnumerator<TVertex> current_vertex;
-        private bool IsOCcuringAIteration;
         public int Count { get { return adjacency_lists.Count; } }
         
         public AdjacencyList()
         {
             adjacency_lists = new Dictionary<TVertex, List<OutEdge<TVertex>>>();
             graphType = typeof(TGraphType);
-            IsOCcuringAIteration = false;
+            current_vertex = null;
         }
         
         public override bool MoveIterator()
         {
-            if (!IsOCcuringAIteration)
+            if (current_vertex is null)
             {
                 ResetIterator();
-                IsOCcuringAIteration = true;
             }
 
             if (!current_vertex.MoveNext())
             {
-                IsOCcuringAIteration = false;
+                current_vertex = null;
                 return false;
             }
             return true;
