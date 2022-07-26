@@ -10,23 +10,22 @@ using GraphLib.EdgeList;
 using GraphLib.AdjacencyMatrix;
 using GraphLib.IncidenceMatrix;
 
+Graph<char, Directed> g = new AdjacencyList<char, Directed>();
 
-Graph<int, Directed> g = new EdgeList<int, Directed>();
+g.AddVertex('a');
+g.AddVertex('c');
+g.AddVertex('e');
+g.AddVertex('y');
+g.AddVertex('z');
+g.AddVertex('u');
 
-g.AddVertex(10);
-g.AddVertex(11);
-g.AddVertex(12);
+g.AddEdge(new Edge<char>('a', 'c', 1));
+g.AddEdge(new Edge<char>('a', 'e', 2));
+g.AddEdge(new Edge<char>('e', 'z', 3));
+g.AddEdge(new Edge<char>('e', 'y', 4));
+g.AddEdge(new Edge<char>('z', 'u', 3));
+g.AddEdge(new Edge<char>('c', 'z', 5));
 
-foreach (var vertx in g)
-{
-    Console.WriteLine(vertx);
-}
-
-foreach (var vertx in g)
-{
-    Console.WriteLine(vertx);
-}
-
+var p = g.Dijkstra('a', 'u');
 Console.WriteLine("oi");
-
 

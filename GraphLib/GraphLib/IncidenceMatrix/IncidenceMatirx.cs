@@ -141,8 +141,8 @@ namespace GraphLib.IncidenceMatrix
                 {
                    list.Add(0); 
                 }
-                matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count] = edge.GetWeight();
-                matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count] = null;
+                matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
+                matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
             }
             else
             {
@@ -223,8 +223,7 @@ namespace GraphLib.IncidenceMatrix
                     {
                         for (int j = 0; j < matrix.Count; j++)
                         {
-                            // Null eh igual a 0 ???
-                            if (matrix[j][i] == null || matrix[j][i] != 0)
+                            if ((graphType == typeof(Directed) && matrix[j][i] == null) || (graphType == typeof(Undirected) && matrix[j][i] != 0))
                             {
                                 neighbours.Add(new OutEdge<TVertex>(index_vertex_map[j], (double) matrix[index][i]));
                                 break;

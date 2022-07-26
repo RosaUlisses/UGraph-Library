@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using GraphLib.Edge;
 using GraphLib.Propertys;
@@ -47,6 +48,8 @@ namespace GraphLib
         public abstract bool AreConected(TVertex a, TVertex b);
         public abstract int GetCount();
         public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
+        
+        
 
         public List<TVertex> BreadthFirstSearch(TVertex source)
         {
@@ -56,62 +59,62 @@ namespace GraphLib
 
             queue.Enqueue(source);
 
-            while(queue.Count != 0)
+            while(queue.Count > 0)
             {
                 TVertex vertex = queue.Dequeue();
-                if(!visitedVertexes.Contains(vertex))
+                visitedVertexes.Add(vertex);
+                IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
+                while(neighbours.MoveNext())
                 {
-                    visitedVertexes.Add(vertex);
-                    IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
-                    while(neighbours.MoveNext())
-                    {
-                        if(!visitedVertexes.Contains(neighbours.Current.Destination)) queue.Enqueue(neighbours.Current.Destination);
-                    } 
-                    path.Add(vertex);
-                }
+                    if(!visitedVertexes.Contains(neighbours.Current.Destination)) queue.Enqueue(neighbours.Current.Destination);
+                } 
+                path.Add(vertex);
             }
             
             return path;
         }
 
+        private List<TVertex> GetPathFromPredecesorMap(TVertex source, TVertex destination, Dictionary<TVertex, TVertex> predecesors)
+        {
+            LinkedList<TVertex> path = new LinkedList<TVertex>();
+            TVertex current = destination;
+            while (!current.Equals(source))
+            {
+                path.AddFirst(current);
+                current = predecesors[current];
+            }
+            path.AddFirst(current);
+            return path.ToList();
+        }
+
         public List<TVertex> BreadthFirstSearch(TVertex source, TVertex destination)
         {
-             LinkedList<TVertex> path  = new LinkedList<TVertex>();
              Queue<TVertex> queue = new Queue<TVertex>();
              HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
              Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
              queue.Enqueue(source);
+             List<TVertex> path  = new List<TVertex>();
 
-             while(queue.Count != 0 || visitedVertexes.Contains(destination))
+             while(queue.Count > 0 || !visitedVertexes.Contains(destination))
              {
                  TVertex vertex = queue.Dequeue();
-                 if(!visitedVertexes.Contains(vertex))
+                 visitedVertexes.Add(vertex);
+                 IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
+                 while(neighbours.MoveNext())
                  {
-                     visitedVertexes.Add(vertex);
-                     IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
-                     while(neighbours.MoveNext())
+                     if (!visitedVertexes.Contains(neighbours.Current.Destination))
                      {
-                         if (!visitedVertexes.Contains(neighbours.Current.Destination))
-                         {
-                             queue.Enqueue(neighbours.Current.Destination);
-                             predecesors.Add(vertex, neighbours.Current.Destination);
-                         }
-                     } 
-                 }
+                         queue.Enqueue(neighbours.Current.Destination);
+                         predecesors.Add(neighbours.Current.Destination, vertex);
+                     }
+                 } 
              }
 
              if (visitedVertexes.Contains(destination))
              {
-                 TVertex current = destination;
-                 while (!current.Equals(source))
-                 {
-                     path.AddFirst(current);
-                     current = predecesors[current];
-                 }
-                 path.AddFirst(current);
+                 path = GetPathFromPredecesorMap(source, destination, predecesors);
              }
-
-             return path.ToList();
+             return path;
         }
 
         public List<TVertex> DepthFirstSearch(TVertex source)
@@ -122,7 +125,7 @@ namespace GraphLib
             
             stack.Push(source);
 
-            while (stack.Count != 0)
+            while (stack.Count > 0)
             {
                 TVertex current = stack.Pop();
                 visitedVertexes.Add(current);
@@ -135,6 +138,64 @@ namespace GraphLib
                     }
                 }
                 path.Add(current);
+            }
+            return path;
+        }
+
+        private Dictionary<TVertex, double> InitDistanceMap()
+        {
+            Dictionary<TVertex, double> map = new Dictionary<TVertex, double>();
+            foreach (TVertex vertex in this)
+            {
+                map.Add(vertex, Double.PositiveInfinity);
+            }
+
+            return map;
+        }
+
+        private void RelaxEdge(Edge<TVertex> edge, Dictionary<TVertex, double> distances, Dictionary<TVertex, TVertex> predecesors)
+        {
+            if (distances[edge.Destination] > distances[edge.Source] + edge.Weight)
+            {
+                distances[edge.Destination] = distances[edge.Source] + edge.Weight;
+                predecesors[edge.Destination] = edge.Source;
+            }
+        }
+        public List<TVertex> Dijkstra(TVertex source, TVertex destination)
+        {
+            PriorityQueue<TVertex, double> queue = new PriorityQueue<TVertex, double>();
+            Dictionary<TVertex, double> distances = InitDistanceMap();
+            HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
+            Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+            List<TVertex> path = new List<TVertex>();
+            
+            distances[source] = 0;
+            queue.Enqueue(source, 0);
+            while (queue.Count > 0)
+            {
+                TVertex current = queue.Dequeue();
+                while (visitedVertexes.Contains(current))
+                {
+                    current = queue.Dequeue();
+                }
+
+                IEnumerator<OutEdge<TVertex>> adjacents = GetNeihgbours(current);
+                while (adjacents.MoveNext())
+                {
+                    double previousDistance = distances[adjacents.Current.Destination];        
+                    RelaxEdge(new Edge<TVertex>(current, adjacents.Current.Destination,
+                        adjacents.Current.Weight), distances, predecesors);
+                    if (distances[current] + distances[adjacents.Current.Destination] < previousDistance)
+                    {
+                        queue.Enqueue(adjacents.Current.Destination, distances[current] + distances[adjacents.Current.Destination]);
+                    }
+                }
+                visitedVertexes.Add(current);
+            }
+            
+            if (visitedVertexes.Contains(destination))
+            {
+                 path = GetPathFromPredecesorMap(source, destination, predecesors);
             }
             return path;
         }

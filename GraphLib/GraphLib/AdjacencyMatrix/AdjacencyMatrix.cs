@@ -198,7 +198,7 @@ namespace GraphLib.AdjacencyMatrix
                 {
                     if (matrix[index][i] != 0)
                     {
-                        neighbours.Add(new OutEdge<TVertex>(index_vertex_map[index], matrix[index][i]));
+                        neighbours.Add(new OutEdge<TVertex>(index_vertex_map[i], matrix[index][i]));
                     }
                 }
                 return neighbours.GetEnumerator();
