@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using GraphLib.Edge;
+using GraphLib.EdgeList;
 using GraphLib.Propertys;
 using GraphLib.Exceptions;
 

@@ -195,7 +195,7 @@ namespace GraphLib.IncidenceMatrix
                 throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
             }
         }
-
+        
         public override bool Contains(TVertex vertex)
         {
             return vertex_index_map.ContainsKey(vertex);

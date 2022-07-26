@@ -141,6 +141,21 @@ namespace GraphLib
             }
             return path;
         }
+        
+        public IEnumerator<Edge<TVertex>> GetAllEdges()
+        {
+            List<Edge<TVertex>> edges = new List<Edge<TVertex>>();
+            foreach (TVertex vertex in this)
+            {
+                IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
+                while (neighbours.MoveNext())
+                {
+                    edges.Add(new Edge<TVertex>(vertex, neighbours.Current.Destination, neighbours.Current.Weight)); 
+                }
+            }
+
+            return edges.GetEnumerator();
+        }
 
         private Dictionary<TVertex, double> InitDistanceMap()
         {
@@ -161,6 +176,7 @@ namespace GraphLib
                 predecesors[edge.Destination] = edge.Source;
             }
         }
+        
         public List<TVertex> Dijkstra(TVertex source, TVertex destination)
         {
             PriorityQueue<TVertex, double> queue = new PriorityQueue<TVertex, double>();
@@ -171,7 +187,7 @@ namespace GraphLib
             
             distances[source] = 0;
             queue.Enqueue(source, 0);
-            while (queue.Count > 0)
+            while (queue.Count > 0 || !visitedVertexes.Contains(destination))
             {
                 TVertex current = queue.Dequeue();
                 while (visitedVertexes.Contains(current))
@@ -199,5 +215,35 @@ namespace GraphLib
             }
             return path;
         }
+
+        public List<TVertex> BellmanFord(TVertex source, TVertex destination)
+        {
+            Dictionary<TVertex, double> distances = InitDistanceMap();
+            Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+            List<TVertex> path = new List<TVertex>();
+
+            distances[source] = 0;
+            for (int i = 0; i < this.GetCount(); i++)
+            {
+                IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+                while (edges.MoveNext())
+                {
+                    RelaxEdge(edges.Current, distances, predecesors);
+                }
+            }
+
+            if (predecesors.ContainsKey(destination))
+            {
+                path = GetPathFromPredecesorMap(source, destination, predecesors);
+            }
+
+            return path;
+        }
+
+        public bool HasNegativeCicles()
+        {
+            return false;
+        }
     }
+    
 }

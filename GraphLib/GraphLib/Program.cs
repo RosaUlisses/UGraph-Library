@@ -10,7 +10,7 @@ using GraphLib.EdgeList;
 using GraphLib.AdjacencyMatrix;
 using GraphLib.IncidenceMatrix;
 
-Graph<char, Directed> g = new AdjacencyList<char, Directed>();
+Graph<char, Directed> g = new IncidenceMatrix<char, Directed>();
 
 g.AddVertex('a');
 g.AddVertex('c');
@@ -26,6 +26,6 @@ g.AddEdge(new Edge<char>('e', 'y', 4));
 g.AddEdge(new Edge<char>('z', 'u', 3));
 g.AddEdge(new Edge<char>('c', 'z', 5));
 
-var p = g.Dijkstra('a', 'u');
+var p = g.BellmanFord('a', 'u');
 Console.WriteLine("oi");
 
