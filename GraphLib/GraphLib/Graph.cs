@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 using GraphLib.Edge;
 using GraphLib.Propertys;
 
@@ -141,7 +138,41 @@ namespace GraphLib
             }
             return path;
         }
-        
+
+        public Dictionary<TVertex, Tuple<int,int>> DepthFirstSearch()
+        {
+            HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
+            Dictionary<TVertex, Tuple<int, int>> times = new Dictionary<TVertex, Tuple<int, int>>();
+
+            int time = 0;
+            foreach (TVertex vertex in this)
+            {
+                if (!visitedVertexes.Contains(vertex))
+                {
+                    DetphFirstSearchVisit(vertex, visitedVertexes, times, ref time);
+                }
+            }
+
+            return times;
+        }
+
+        private void DetphFirstSearchVisit(TVertex vertex, HashSet<TVertex> visitedVertexes, Dictionary<TVertex, Tuple<int,int>> times, ref int time)
+        {
+            int firstTime = time + 1;
+            visitedVertexes.Add(vertex);
+            IEnumerator<OutEdge<TVertex>> adjacents = GetNeihgbours(vertex);
+
+            while (adjacents.MoveNext())
+            {
+                if (!visitedVertexes.Contains(adjacents.Current.Destination))
+                {
+                    DetphFirstSearchVisit(adjacents.Current.Destination, visitedVertexes, times, ref time);
+                }
+            }
+            int secondTime = time + 1;
+            times[vertex] = new Tuple<int, int>(firstTime, secondTime);
+        }
+
         public IEnumerator<Edge<TVertex>> GetAllEdges()
         {
             List<Edge<TVertex>> edges = new List<Edge<TVertex>>();
