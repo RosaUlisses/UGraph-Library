@@ -240,8 +240,30 @@ namespace GraphLib
             return path;
         }
 
-        public bool HasNegativeCicles()
+        public bool HasNegativeCicles(TVertex source)
         {
+            Dictionary<TVertex, double> distances = InitDistanceMap();
+            Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+            List<TVertex> path = new List<TVertex>();
+            IEnumerator<Edge<TVertex>> edges;
+            distances[source] = 0;
+            for (int i = 0; i < this.GetCount(); i++)
+            {
+                 edges = GetAllEdges();
+                 while (edges.MoveNext())
+                 {
+                     RelaxEdge(edges.Current, distances, predecesors);
+                 }
+            }
+
+            edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                if (distances[edges.Current.Destination] < distances[edges.Current.Source] + edges.Current.Weight)
+                {
+                    return true;
+                }
+            }
             return false;
         }
     }

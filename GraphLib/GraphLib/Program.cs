@@ -27,5 +27,6 @@ g.AddEdge(new Edge<char>('z', 'u', 3));
 g.AddEdge(new Edge<char>('c', 'z', 5));
 
 var p = g.BellmanFord('a', 'u');
+
 Console.WriteLine("oi");
 
