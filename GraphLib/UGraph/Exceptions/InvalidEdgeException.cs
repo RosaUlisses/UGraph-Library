@@ -1,5 +1,4 @@
-﻿
-namespace GraphLib.Exceptions
+﻿namespace UGraph.Exceptions
 {
     public class InvalidEdgeException : Exception
     {

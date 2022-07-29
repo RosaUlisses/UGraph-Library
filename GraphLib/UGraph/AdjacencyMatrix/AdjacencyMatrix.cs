@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GraphLib.Propertys;
-using GraphLib.Edge;
-using GraphLib.Exceptions;
+using UGraph.Propertys;
+using UGraph.Edge;
+using UGraph.Exceptions;
 
-namespace GraphLib.AdjacencyMatrix
+namespace UGraph.AdjacencyMatrix
 {
     public class AdjacencyMatrix<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>

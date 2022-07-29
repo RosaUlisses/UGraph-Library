@@ -1,12 +1,11 @@
-/*
 using NUnit.Framework;
-using GraphLib;
-using GraphLib.Edge;
-using GraphLib.AdjacencyList;
-using GraphLib.EdgeList;
-using GraphLib.AdjacencyMatrix;
-using GraphLib.IncidenceMatrix;
-using GraphLib.Propertys;
+using UGraph;
+using UGraph.Edge;
+using UGraph.AdjacencyList;
+using UGraph.EdgeList;
+using UGraph.AdjacencyMatrix;
+using UGraph.IncidenceMatrix;
+using UGraph.Propertys;
 
 namespace Tests
 {
@@ -61,4 +60,3 @@ namespace Tests
          }       
     }
 }
-*/

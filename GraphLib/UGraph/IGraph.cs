@@ -1,4 +1,4 @@
-﻿namespace GraphLib
+﻿namespace UGraph
 {
     public interface IGraph<TVertex>
     {

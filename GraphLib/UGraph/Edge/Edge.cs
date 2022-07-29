@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace GraphLib.Edge
+namespace UGraph.Edge
 {
     public class Edge<TVertex> :  IEdge<TVertex>
     {

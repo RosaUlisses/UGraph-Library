@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using GraphLib.Edge;
-using GraphLib.EdgeList;
-using GraphLib.Propertys;
-using GraphLib.Exceptions;
+using UGraph.Edge;
+using UGraph.EdgeList;
+using UGraph.Propertys;
+using UGraph.Exceptions;
 
-namespace GraphLib.AdjacencyList
+namespace UGraph.AdjacencyList
 {
     public class AdjacencyList<TVertex, TGraphType, TList, TMap> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>

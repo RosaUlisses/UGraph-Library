@@ -1,21 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using GraphLib.Propertys;
-using GraphLib.Edge;
-using GraphLib.Exceptions;
+using UGraph.Propertys;
+using UGraph.Edge;
+using UGraph.Exceptions;
 
 
-namespace GraphLib.EdgeList
+namespace UGraph.EdgeList
 {
-    public class EdgeList<TVertex, TGraphType, TVertexList, TEdgeList> : Graph<TVertex, TGraphType>
+    public class EdgeList<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
         where TGraphType : GraphType
-        where TVertexList : ICollection<TVertex>, new()
-        where TEdgeList : ICollection<Edge<TVertex>>, new()
     {
         private readonly Type graphType;
-        private TVertexList vertexes;
-        private TEdgeList edge_list;
+        private HashSet<TVertex> vertexes;
+        private List<Edge<TVertex>> edge_list;
         
         public int Count { get { return vertexes.Count; } }
 
@@ -24,8 +22,8 @@ namespace GraphLib.EdgeList
         public EdgeList()
         {
             graphType = typeof(TGraphType);
-            vertexes = new TVertexList();
-            edge_list = new TEdgeList();
+            vertexes = new HashSet<TVertex>();
+            edge_list = new List<Edge<TVertex>>();
             current_vertex = null;
         }
         
@@ -53,8 +51,8 @@ namespace GraphLib.EdgeList
         public override void ResetIterator()
         {
             current_vertex = vertexes.GetEnumerator();
-        }
-        
+        }       
+         
         public override void AddVertex(TVertex vertex)
         {
             vertexes.Add(vertex);
@@ -75,7 +73,7 @@ namespace GraphLib.EdgeList
             if (!result)
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
-            }
+            }           
         }
 
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
@@ -115,29 +113,24 @@ namespace GraphLib.EdgeList
         }
 
         public override void RemoveEdge(Edge<TVertex> edge)
-        {   
-            if (edge.Source == null || edge.Destination == null)
-            {
-             throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
-            }
-            if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
-            {
-                throw new InvalidEdgeException($"Edge {edge} is not valid");
-            }
-            if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
-            else RemoveEdgeUndirectedGraph(edge);
+        {
+             if (edge.Source == null || edge.Destination == null)
+             {
+                 throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+             }
+             if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
+             {
+                 throw new InvalidEdgeException($"Edge {edge} is not valid");
+             }   
+             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
+             else RemoveEdgeUndirectedGraph(edge);
         }
         
-        public override bool Contains(TVertex vertex)
-        {
-            return vertexes.Contains(vertex);
-        }
-
         public override bool AreConected(TVertex a, TVertex b)
         {
             if (a == null || b == null)
             {
-             throw new InvalidEdgeException("A vertex can not be null");
+                throw new InvalidEdgeException("A vertex can not be null");
             }
             if (!vertexes.Contains(a) || !vertexes.Contains(b))
             {
@@ -147,7 +140,12 @@ namespace GraphLib.EdgeList
             // Arrumar isso, ta horrivel
             return edge_list.Where(edge => edge.Source.Equals(a) && edge.Destination.Equals(b)).ToList().Count != 0;
         }
-        
+
+        public override bool Contains(TVertex vertex)
+        {
+            return vertexes.Contains(vertex);
+        }
+
         public override int GetCount()
         {
             return Count;
@@ -156,9 +154,10 @@ namespace GraphLib.EdgeList
         protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
         {
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
-            
+
             if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
-            if(vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            
 
             foreach (Edge<TVertex> edge in edge_list)
             {
@@ -169,7 +168,7 @@ namespace GraphLib.EdgeList
             }
             return adjacents.GetEnumerator();
         }
-        
+
         public override List<TVertex> GetAdjacencyList(TVertex vertex)
         {
             List<TVertex> adjacents = new List<TVertex>();
@@ -177,14 +176,15 @@ namespace GraphLib.EdgeList
             if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
             if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             
+
             foreach (Edge<TVertex> edge in edge_list)
             {
                 if (edge.Source.Equals(vertex))
                 {
-                    adjacents.Add(edge.Destination); 
+                   adjacents.Add(edge.Destination); 
                 } 
             }
             return adjacents;
-        }       
+        }
     }
 }

@@ -30,4 +30,8 @@
     <None Remove="Vertex\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UGraph\UGraph.csproj" />
+  </ItemGroup>
+
 </Project>

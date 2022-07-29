@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using GraphLib.Edge;
-using GraphLib.Propertys;
+using UGraph.Edge;
+using UGraph.Propertys;
 
-namespace GraphLib
+namespace UGraph
 {
     public abstract class Graph<TVertex, TGraphType> : IEnumerator, IEnumerable
         where TVertex : IComparable<TVertex>

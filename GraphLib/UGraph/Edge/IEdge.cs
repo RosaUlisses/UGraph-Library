@@ -1,4 +1,4 @@
-﻿namespace GraphLib.Edge
+﻿namespace UGraph.Edge
 {
    public interface IEdge<TVertex>
    {

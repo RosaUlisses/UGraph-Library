@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GraphLib.Propertys;
-using GraphLib.Edge;
-using GraphLib.Exceptions;
+using UGraph.Propertys;
+using UGraph.Edge;
+using UGraph.Exceptions;
 
-namespace GraphLib.IncidenceMatrix
+namespace UGraph.IncidenceMatrix
 {
     public class IncidenceMatrix<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>

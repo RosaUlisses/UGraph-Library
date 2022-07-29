@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GraphLib.Propertys
+namespace UGraph.Propertys
 {
-    public class Undirected : GraphType
+    public class Directed : GraphType
     {
     }
 }
