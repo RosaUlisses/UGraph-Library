@@ -122,14 +122,21 @@ namespace UGraph.IncidenceMatrix
                  {
                     list.Add(0); 
                  }
-                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count] = edge.GetWeight();
-                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count] = null;
+                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
+                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
+                index_edge_map.Add(edge, matrix[0].Count - 1);
+                if (!edge.Source.Equals(edge.Destination))
+                {
+                    index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight), matrix[0].Count - 1);
+                }
              }
              else
              {
                  int index = empty_edge_indexes.Pop();
                  matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
                  matrix[vertex_index_map[edge.GetDestination()]][index] = edge.GetWeight();
+                index_edge_map.Add(edge, index);
+                index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight), index);
              }                   
         }
         
@@ -143,12 +150,14 @@ namespace UGraph.IncidenceMatrix
                 }
                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
+                index_edge_map.Add(edge, matrix[0].Count - 1);
             }
             else
             {
                 int index = empty_edge_indexes.Pop();
                 matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][index] = null;
+                index_edge_map.Add(edge, index);
             }
         }
         
@@ -185,6 +194,7 @@ namespace UGraph.IncidenceMatrix
 
                     if (counter == 2) break;
                 }
+                empty_edge_indexes.Push(index);
             }
             catch (ArgumentNullException e)
             {
@@ -195,7 +205,23 @@ namespace UGraph.IncidenceMatrix
                 throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
             }
         }
-        
+
+        public override void ClearEdges()
+        {
+            for (int i = 0; i < matrix.Count; i++)
+            {
+                for (int j = 0; j < matrix[0].Count; j++)
+                {
+                    matrix[i][j] = 0;
+                } 
+            }
+
+            for (int i = 0; i < matrix[0].Count; i++)
+            {
+                empty_edge_indexes.Push(i);
+            }
+        }
+
         public override bool Contains(TVertex vertex)
         {
             return vertex_index_map.ContainsKey(vertex);

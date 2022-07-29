@@ -162,6 +162,17 @@ namespace UGraph.AdjacencyMatrix
             }
         }
 
+        public override void ClearEdges()
+        {
+            for (int i = 0; i < matrix.Count; i++)
+            {
+                for (int j = 0; j < matrix[0].Count; j++)
+                {
+                    matrix[i][j] = 0;
+                } 
+            } 
+        }
+
         public override bool Contains(TVertex vertex)
         {
             return vertex_index_map.ContainsKey(vertex);

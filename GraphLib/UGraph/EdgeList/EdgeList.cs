@@ -127,7 +127,12 @@ namespace UGraph.EdgeList
             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
             else RemoveEdgeUndirectedGraph(edge);
         }
-        
+
+        public override void ClearEdges()
+        {
+            edge_list.Clear();
+        }
+
         public override bool Contains(TVertex vertex)
         {
             return vertexes.Contains(vertex);

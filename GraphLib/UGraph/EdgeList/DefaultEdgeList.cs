@@ -14,8 +14,11 @@ namespace UGraph.EdgeList
         private readonly Type graphType;
         private HashSet<TVertex> vertexes;
         private List<Edge<TVertex>> edge_list;
-        
-        public int Count { get { return vertexes.Count; } }
+
+        public int Count
+        {
+            get { return vertexes.Count; }
+        }
 
         private IEnumerator<TVertex> current_vertex;
 
@@ -26,7 +29,7 @@ namespace UGraph.EdgeList
             edge_list = new List<Edge<TVertex>>();
             current_vertex = null;
         }
-        
+
         public override bool MoveIterator()
         {
             if (current_vertex is null)
@@ -41,18 +44,18 @@ namespace UGraph.EdgeList
             }
 
             return true;
-        }        
-        
+        }
+
         public override TVertex GetIteratorValue()
         {
             return current_vertex.Current;
         }
-        
+
         public override void ResetIterator()
         {
             current_vertex = vertexes.GetEnumerator();
-        }       
-         
+        }
+
         public override void AddVertex(TVertex vertex)
         {
             vertexes.Add(vertex);
@@ -73,7 +76,7 @@ namespace UGraph.EdgeList
             if (!result)
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
-            }           
+            }
         }
 
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
@@ -93,14 +96,16 @@ namespace UGraph.EdgeList
             {
                 throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
             }
+
             if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
             {
                 throw new InvalidEdgeException($"Edge {edge} is not valid");
             }
+
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);
         }
-        
+
         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
             edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
@@ -114,24 +119,32 @@ namespace UGraph.EdgeList
 
         public override void RemoveEdge(Edge<TVertex> edge)
         {
-             if (edge.Source == null || edge.Destination == null)
-             {
-                 throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
-             }
-             if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
-             {
-                 throw new InvalidEdgeException($"Edge {edge} is not valid");
-             }   
-             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
-             else RemoveEdgeUndirectedGraph(edge);
+            if (edge.Source == null || edge.Destination == null)
+            {
+                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+            }
+
+            if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
+            {
+                throw new InvalidEdgeException($"Edge {edge} is not valid");
+            }
+
+            if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
+            else RemoveEdgeUndirectedGraph(edge);
         }
-        
+
+        public override void ClearEdges()
+        {
+            edge_list.Clear();
+        }
+
         public override bool AreConected(TVertex a, TVertex b)
         {
             if (a == null || b == null)
             {
                 throw new InvalidEdgeException("A vertex can not be null");
             }
+
             if (!vertexes.Contains(a) || !vertexes.Contains(b))
             {
                 throw new InvalidEdgeException("Invalid vertexes");
@@ -155,17 +168,19 @@ namespace UGraph.EdgeList
         {
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
 
-            if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
-            if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
-            
+            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
+            if (!vertexes.Contains(vertex))
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+
 
             foreach (Edge<TVertex> edge in edge_list)
             {
                 if (edge.Source.Equals(vertex))
                 {
-                   adjacents.Add(new OutEdge<TVertex>(edge.Destination, edge.Weight)); 
-                } 
+                    adjacents.Add(new OutEdge<TVertex>(edge.Destination, edge.Weight));
+                }
             }
+
             return adjacents.GetEnumerator();
         }
 
@@ -173,17 +188,19 @@ namespace UGraph.EdgeList
         {
             List<TVertex> adjacents = new List<TVertex>();
 
-            if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
-            if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
-            
+            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
+            if (!vertexes.Contains(vertex))
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+
 
             foreach (Edge<TVertex> edge in edge_list)
             {
                 if (edge.Source.Equals(vertex))
                 {
-                   adjacents.Add(edge.Destination); 
-                } 
+                    adjacents.Add(edge.Destination);
+                }
             }
+
             return adjacents;
         }
     }

@@ -31,10 +31,10 @@ namespace Tests
                 undirectedEdgeList.AddVertex(i);
             }
 
-            bool result = false;
+            bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result || (directedEdgeList.Contains(i) && undirectedEdgeList.Contains(i));
+                result = result && (directedEdgeList.Contains(i) && undirectedEdgeList.Contains(i));
             }
             Assert.True(result);
         }
@@ -50,10 +50,10 @@ namespace Tests
                 undirectedAdjacencyList.AddVertex(i);
             }
 
-            bool result = false;
+            bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result || (directedAdjacencyList.Contains(i) && undirectedAdjacencyList.Contains(i));
+                result = result && (directedAdjacencyList.Contains(i) && undirectedAdjacencyList.Contains(i));
             }
             Assert.True(result);
         }
@@ -69,10 +69,10 @@ namespace Tests
                 undirectedAdjacencyMatrix.AddVertex(i);
             }
 
-            bool result = false;
+            bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result || (directedAdjacencyMatrix.Contains(i) && undirectedAdjacencyMatrix.Contains(i));
+                result = result && (directedAdjacencyMatrix.Contains(i) && undirectedAdjacencyMatrix.Contains(i));
             }
             Assert.True(result);
         }
@@ -88,10 +88,10 @@ namespace Tests
                 undirectedIncidenceMatrix.AddVertex(i);
             }
 
-            bool result = false;
+            bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result || (directedIncidenceMatrix.Contains(i) && undirectedIncidenceMatrix.Contains(i));
+                result = result && (directedIncidenceMatrix.Contains(i) && undirectedIncidenceMatrix.Contains(i));
             }
             Assert.True(result);
          }       

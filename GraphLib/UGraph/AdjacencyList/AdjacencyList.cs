@@ -134,6 +134,14 @@ namespace UGraph.AdjacencyList
             }
         }
 
+        public override void ClearEdges()
+        {
+            foreach (TVertex vertex in this)
+            {
+               adjacency_lists[vertex].Clear();
+            }
+        }
+
         public override bool Contains(TVertex vertex)
         {
             return adjacency_lists.ContainsKey(vertex);

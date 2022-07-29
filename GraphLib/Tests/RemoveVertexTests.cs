@@ -34,10 +34,10 @@ namespace Tests
                 undirectedEdgeList.RemoveVertex(i);
             }
 
-            bool result = false;
+            bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result || (!directedEdgeList.Contains(i) && !undirectedEdgeList.Contains(i));
+                result = result && (!directedEdgeList.Contains(i) && !undirectedEdgeList.Contains(i));
             }            
             Assert.True(true);
          }
@@ -55,10 +55,10 @@ namespace Tests
                  undirectedAdjacencyList.RemoveVertex(i);
              }
  
-             bool result = false;
+             bool result = true;
              for (int i = 0; i < 10; i++)
              {
-                 result = result || (!directedAdjacencyList.Contains(i) && !undirectedAdjacencyList.Contains(i));
+                 result = result && (!directedAdjacencyList.Contains(i) && !undirectedAdjacencyList.Contains(i));
              }            
              Assert.True(true);            
          }
@@ -76,10 +76,10 @@ namespace Tests
                  undirectedAdjacencyMatrix.RemoveVertex(i);
              }
  
-             bool result = false;
+             bool result = true;
              for (int i = 0; i < 10; i++)
              {
-                 result = result || (!directedAdjacencyMatrix.Contains(i) && !undirectedAdjacencyMatrix.Contains(i));
+                 result = result && (!directedAdjacencyMatrix.Contains(i) && !undirectedAdjacencyMatrix.Contains(i));
              }            
              
              for (int i = 0; i < 10; i++)
@@ -89,7 +89,7 @@ namespace Tests
              }
              for (int i = 0; i < 10; i++)
              {
-                result = result || (directedAdjacencyMatrix.Contains(i) && undirectedAdjacencyMatrix.Contains(i));
+                result = result && (directedAdjacencyMatrix.Contains(i) && undirectedAdjacencyMatrix.Contains(i));
              }
              for (int i = 0; i < 10; i++)
              { 
@@ -98,7 +98,7 @@ namespace Tests
              }
              for (int i = 0; i < 10; i++)
              {
-                  result = result || (!directedAdjacencyMatrix.Contains(i) && !undirectedAdjacencyMatrix.Contains(i));
+                  result = result && (!directedAdjacencyMatrix.Contains(i) && !undirectedAdjacencyMatrix.Contains(i));
              }            
              Assert.True(true); 
          }
@@ -116,10 +116,10 @@ namespace Tests
                  undirectedIncidenceMatrix.RemoveVertex(i);
              }
  
-             bool result = false;
+             bool result = true;
              for (int i = 0; i < 10; i++)
              {
-                 result = result || (!directedIncidenceMatrix.Contains(i) && !undirectedIncidenceMatrix.Contains(i));
+                 result = result && (!directedIncidenceMatrix.Contains(i) && !undirectedIncidenceMatrix.Contains(i));
              }            
              
              for (int i = 0; i < 10; i++)
@@ -129,7 +129,7 @@ namespace Tests
              }
              for (int i = 0; i < 10; i++)
              {
-                 result = result || (directedIncidenceMatrix.Contains(i) && undirectedIncidenceMatrix.Contains(i));
+                 result = result && (directedIncidenceMatrix.Contains(i) && undirectedIncidenceMatrix.Contains(i));
              }
              for (int i = 0; i < 10; i++)
              { 
@@ -138,7 +138,7 @@ namespace Tests
              }
              for (int i = 0; i < 10; i++)
              {
-                 result = result || (!directedIncidenceMatrix.Contains(i) && !undirectedIncidenceMatrix.Contains(i));
+                 result = result && (!directedIncidenceMatrix.Contains(i) && !undirectedIncidenceMatrix.Contains(i));
              }            
              Assert.True(true); 
           }    

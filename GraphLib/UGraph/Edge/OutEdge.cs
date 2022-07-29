@@ -21,17 +21,17 @@ namespace UGraph.Edge
         }
         public override bool Equals(object? obj)
         {
-            if (obj == null  || GetType().Equals(obj.GetType()))
+            if (obj == null  || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
             OutEdge<TVertex> outEdge = (OutEdge<TVertex>)obj;
-            return Destination.Equals(outEdge.Destination) && Weight == outEdge.Weight;
+            return Destination.Equals(outEdge.Destination);
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return Destination.GetHashCode();
         }
 
         public int CompareTo(OutEdge<TVertex>? other)
