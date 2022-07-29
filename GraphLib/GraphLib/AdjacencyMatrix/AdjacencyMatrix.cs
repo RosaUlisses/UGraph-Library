@@ -188,9 +188,9 @@ namespace GraphLib.AdjacencyMatrix
             return Count;
         }
 
-        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
         {
-            List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
+            List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
             try
             {
                 int index = vertex_index_map[vertex];
@@ -198,10 +198,35 @@ namespace GraphLib.AdjacencyMatrix
                 {
                     if (matrix[index][i] != 0)
                     {
-                        neighbours.Add(new OutEdge<TVertex>(index_vertex_map[i], matrix[index][i]));
+                        adjacents.Add(new OutEdge<TVertex>(index_vertex_map[i], matrix[index][i]));
                     }
                 }
-                return neighbours.GetEnumerator();
+                return adjacents.GetEnumerator();
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
+        }
+
+        public override List<TVertex> GetAdjacencyList(TVertex vertex)
+        {
+            List<TVertex> adjacents = new List<TVertex>();
+            try
+            {
+                int index = vertex_index_map[vertex];
+                for (int i = 0; i < matrix[index].Count; i++)
+                {
+                    if (matrix[index][i] != 0)
+                    {
+                        adjacents.Add(index_vertex_map[i]);
+                    }
+                }
+                return adjacents;
             }
             catch (ArgumentNullException e)
             {

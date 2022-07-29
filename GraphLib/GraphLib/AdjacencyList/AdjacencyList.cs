@@ -160,7 +160,7 @@ namespace GraphLib.AdjacencyList
             return Count;
         }
 
-        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
         {
             try
             {
@@ -174,6 +174,22 @@ namespace GraphLib.AdjacencyList
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             }
+        }
+
+        public override List<TVertex> GetAdjacencyList(TVertex vertex)
+        {
+            try
+            {
+                return adjacency_lists[vertex].Select(value => value.Destination).ToList();
+            }
+            catch (ArgumentNullException e)
+            { 
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            { 
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }           
         }
     }
 }

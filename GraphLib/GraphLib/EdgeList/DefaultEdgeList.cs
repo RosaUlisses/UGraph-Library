@@ -151,9 +151,9 @@ namespace GraphLib.EdgeList
             return Count;
         }
 
-        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
         {
-            List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
+            List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
 
             if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
             if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
@@ -163,10 +163,28 @@ namespace GraphLib.EdgeList
             {
                 if (edge.Source.Equals(vertex))
                 {
-                   neighbours.Add(new OutEdge<TVertex>(edge.Destination, edge.Weight)); 
+                   adjacents.Add(new OutEdge<TVertex>(edge.Destination, edge.Weight)); 
                 } 
             }
-            return neighbours.GetEnumerator();
+            return adjacents.GetEnumerator();
+        }
+
+        public override List<TVertex> GetAdjacencyList(TVertex vertex)
+        {
+            List<TVertex> adjacents = new List<TVertex>();
+
+            if(vertex is null) throw new InvalidVertexException("A vertex can not be null");
+            if(!vertexes.Contains(vertex)) throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            
+
+            foreach (Edge<TVertex> edge in edge_list)
+            {
+                if (edge.Source.Equals(vertex))
+                {
+                   adjacents.Add(edge.Destination); 
+                } 
+            }
+            return adjacents;
         }
     }
 }

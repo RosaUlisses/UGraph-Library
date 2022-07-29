@@ -44,10 +44,11 @@ namespace GraphLib
         public abstract bool Contains(TVertex vertex);
         public abstract bool AreConected(TVertex a, TVertex b);
         public abstract int GetCount();
-        public abstract IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex);
-        
-        
+        protected abstract IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex);
 
+        public abstract List<TVertex> GetAdjacencyList(TVertex vertex);
+        
+        
         public List<TVertex> BreadthFirstSearch(TVertex source)
         {
             List<TVertex> path  = new List<TVertex>();
@@ -60,10 +61,10 @@ namespace GraphLib
             {
                 TVertex vertex = queue.Dequeue();
                 visitedVertexes.Add(vertex);
-                IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
-                while(neighbours.MoveNext())
+                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                while(adjacents.MoveNext())
                 {
-                    if(!visitedVertexes.Contains(neighbours.Current.Destination)) queue.Enqueue(neighbours.Current.Destination);
+                    if(!visitedVertexes.Contains(adjacents.Current.Destination)) queue.Enqueue(adjacents.Current.Destination);
                 } 
                 path.Add(vertex);
             }
@@ -96,13 +97,13 @@ namespace GraphLib
              {
                  TVertex vertex = queue.Dequeue();
                  visitedVertexes.Add(vertex);
-                 IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
-                 while(neighbours.MoveNext())
+                 IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                 while(adjacents.MoveNext())
                  {
-                     if (!visitedVertexes.Contains(neighbours.Current.Destination))
+                     if (!visitedVertexes.Contains(adjacents.Current.Destination))
                      {
-                         queue.Enqueue(neighbours.Current.Destination);
-                         predecesors.Add(neighbours.Current.Destination, vertex);
+                         queue.Enqueue(adjacents.Current.Destination);
+                         predecesors.Add(adjacents.Current.Destination, vertex);
                      }
                  } 
              }
@@ -126,12 +127,12 @@ namespace GraphLib
             {
                 TVertex current = stack.Pop();
                 visitedVertexes.Add(current);
-                IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(current);
-                while (neighbours.MoveNext())
+                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
+                while (adjacents.MoveNext())
                 {
-                    if (!visitedVertexes.Contains(neighbours.Current.Destination))
+                    if (!visitedVertexes.Contains(adjacents.Current.Destination))
                     {
-                        stack.Push(neighbours.Current.Destination);
+                        stack.Push(adjacents.Current.Destination);
                     }
                 }
                 path.Add(current);
@@ -166,7 +167,7 @@ namespace GraphLib
         {
             int firstTime = time + 1;
             visitedVertexes.Add(vertex);
-            IEnumerator<OutEdge<TVertex>> adjacents = GetNeihgbours(vertex);
+            IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
 
             while (adjacents.MoveNext())
             {
@@ -183,6 +184,7 @@ namespace GraphLib
         { 
             // Levantar excecao se o grafo nao for um DAG (direcionado aciclico) ???? 
             List<Tuple<TVertex, int, int>> timesDFS = DepthFirstSearch();
+            // Rever esse return porque esta ruim !!!!
             return timesDFS
                 .OrderBy(value => value.Item3)
                 .Select(value => value.Item1)
@@ -194,10 +196,10 @@ namespace GraphLib
             List<Edge<TVertex>> edges = new List<Edge<TVertex>>();
             foreach (TVertex vertex in this)
             {
-                IEnumerator<OutEdge<TVertex>> neighbours = GetNeihgbours(vertex);
-                while (neighbours.MoveNext())
+                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                while (adjacents.MoveNext())
                 {
-                    edges.Add(new Edge<TVertex>(vertex, neighbours.Current.Destination, neighbours.Current.Weight)); 
+                    edges.Add(new Edge<TVertex>(vertex, adjacents.Current.Destination, adjacents.Current.Weight)); 
                 }
             }
 
@@ -242,7 +244,7 @@ namespace GraphLib
                     current = queue.Dequeue();
                 }
 
-                IEnumerator<OutEdge<TVertex>> adjacents = GetNeihgbours(current);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
                 while (adjacents.MoveNext())
                 {
                     double previousDistance = distances[adjacents.Current.Destination];        
@@ -287,7 +289,7 @@ namespace GraphLib
             return path;
         }
 
-        public bool HasNegativeCicles(TVertex source)
+        public bool HasNegativeCycles(TVertex source)
         {
             Dictionary<TVertex, double> distances = InitDistanceMap();
             Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
@@ -311,6 +313,43 @@ namespace GraphLib
                     return true;
                 }
             }
+            return false;
+        }
+
+        public bool HasCycle(TVertex source)
+        {
+            Stack<TVertex> stack = new Stack<TVertex>();
+            HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
+
+            stack.Push(source);
+
+            while (stack.Count > 0)
+            {
+                 TVertex current = stack.Pop();
+                 visitedVertexes.Add(current);
+                 IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
+                 while (adjacents.MoveNext())
+                 {
+                     if (!visitedVertexes.Contains(adjacents.Current.Destination))
+                     {
+                         stack.Push(adjacents.Current.Destination);
+                     }
+                     else return true;
+                 } 
+            }
+            return false;
+        }
+
+        public bool HasCycle()
+        {
+            foreach (TVertex vertex in this)
+            {
+                if (HasCycle(vertex))
+                {
+                    return true;
+                }
+            }
+            
             return false;
         }
     }

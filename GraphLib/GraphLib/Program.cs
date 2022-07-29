@@ -26,7 +26,7 @@ g.AddEdge(new Edge<char>('e', 'y', 4));
 g.AddEdge(new Edge<char>('z', 'u', 3));
 g.AddEdge(new Edge<char>('c', 'z', 5));
 
-var p = g.BellmanFord('a', 'u');
+var p = g.GetAdjacencyList('a');
 
 Console.WriteLine("oi");
 

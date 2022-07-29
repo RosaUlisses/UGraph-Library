@@ -211,9 +211,9 @@ namespace GraphLib.IncidenceMatrix
             return Count;
         }
 
-        public override IEnumerator<OutEdge<TVertex>> GetNeihgbours(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
         {
-            List<OutEdge<TVertex>> neighbours = new List<OutEdge<TVertex>>();
+            List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
             try
             {
                 int index = vertex_index_map[vertex];
@@ -225,13 +225,13 @@ namespace GraphLib.IncidenceMatrix
                         {
                             if ((graphType == typeof(Directed) && matrix[j][i] == null) || (graphType == typeof(Undirected) && matrix[j][i] != 0))
                             {
-                                neighbours.Add(new OutEdge<TVertex>(index_vertex_map[j], (double) matrix[index][i]));
+                                adjacents.Add(new OutEdge<TVertex>(index_vertex_map[j], (double) matrix[index][i]));
                                 break;
                             }
                         }
                     }
                 }
-                return neighbours.GetEnumerator();
+                return adjacents.GetEnumerator();
             }
             catch (ArgumentNullException e)
             {
@@ -241,6 +241,38 @@ namespace GraphLib.IncidenceMatrix
             {
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             }
+        }
+
+        public override List<TVertex> GetAdjacencyList(TVertex vertex)
+        {
+             List<TVertex> adjacents = new List<TVertex>();
+             try
+             {
+                 int index = vertex_index_map[vertex];
+                 for (int i = 0; i < matrix[index].Count; i++)
+                 {
+                     if (matrix[index][i] != null && matrix[index][i] != 0)
+                     {
+                         for (int j = 0; j < matrix.Count; j++)
+                         {
+                             if ((graphType == typeof(Directed) && matrix[j][i] == null) || (graphType == typeof(Undirected) && matrix[j][i] != 0))
+                             {
+                                 adjacents.Add(index_vertex_map[j]);
+                                 break;
+                             }
+                         }
+                     }
+                 }
+                 return adjacents;
+             }
+             catch (ArgumentNullException e)
+             {
+                 throw new InvalidVertexException("A vertex can not be null");
+             }
+             catch (KeyNotFoundException e)
+             {
+                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+             }           
         }
     }
 }
