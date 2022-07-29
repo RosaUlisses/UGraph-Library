@@ -19,6 +19,7 @@
     <Compile Remove="Propertys.cs" />
     <Compile Remove="Vertex\**" />
     <Compile Remove="teste.cs" />
+    <Compile Remove="Color.cs" />
   </ItemGroup>
 
   <ItemGroup>

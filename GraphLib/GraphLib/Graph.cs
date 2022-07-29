@@ -139,7 +139,7 @@ namespace GraphLib
             return path;
         }
 
-        public Dictionary<TVertex, Tuple<int,int>> DepthFirstSearch()
+        public List<Tuple<TVertex,int,int>> DepthFirstSearch()
         {
             HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
             Dictionary<TVertex, Tuple<int, int>> times = new Dictionary<TVertex, Tuple<int, int>>();
@@ -153,7 +153,13 @@ namespace GraphLib
                 }
             }
 
-            return times;
+            List<Tuple<TVertex, int, int>> timesList = new List<Tuple<TVertex, int, int>>();
+            foreach (KeyValuePair<TVertex, Tuple<int,int>> pair in times)
+            {
+                timesList.Add(new Tuple<TVertex, int, int>(pair.Key, pair.Value.Item1, pair.Value.Item2)); 
+            }
+
+            return timesList;
         }
 
         private void DetphFirstSearchVisit(TVertex vertex, HashSet<TVertex> visitedVertexes, Dictionary<TVertex, Tuple<int,int>> times, ref int time)
@@ -171,6 +177,16 @@ namespace GraphLib
             }
             int secondTime = time + 1;
             times[vertex] = new Tuple<int, int>(firstTime, secondTime);
+        }
+
+        public List<TVertex> TopologicalSort()
+        { 
+            // Levantar excecao se o grafo nao for um DAG (direcionado aciclico) ???? 
+            List<Tuple<TVertex, int, int>> timesDFS = DepthFirstSearch();
+            return timesDFS
+                .OrderBy(value => value.Item3)
+                .Select(value => value.Item1)
+                .ToList();
         }
 
         public IEnumerator<Edge<TVertex>> GetAllEdges()
