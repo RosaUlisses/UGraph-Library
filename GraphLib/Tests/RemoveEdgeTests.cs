@@ -1,4 +1,3 @@
-/*
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Interfaces;
 using NUnit.Framework;
 using UGraph;
@@ -267,4 +266,3 @@ namespace Tests
         }
     }
 }
-*/

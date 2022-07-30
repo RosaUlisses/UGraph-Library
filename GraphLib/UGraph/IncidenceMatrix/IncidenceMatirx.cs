@@ -195,6 +195,7 @@ namespace UGraph.IncidenceMatrix
                     if (counter == 2) break;
                 }
                 empty_edge_indexes.Push(index);
+                index_edge_map.Remove(edge);
             }
             catch (ArgumentNullException e)
             {
@@ -220,6 +221,8 @@ namespace UGraph.IncidenceMatrix
             {
                 empty_edge_indexes.Push(i);
             }
+            
+            index_edge_map.Clear();
         }
 
         public override bool Contains(TVertex vertex)

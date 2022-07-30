@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UGraph.Edge;
+using UGraph.EdgeList;
 using UGraph.Propertys;
 
 namespace UGraph
@@ -41,6 +42,7 @@ namespace UGraph
         public abstract void RemoveVertex(TVertex vertex);
         public abstract void AddEdge(Edge<TVertex> edge);
         public abstract void RemoveEdge(Edge<TVertex> edge);
+        // public abstract void UpdateEdgeWheight(Edge<TVertex> edge, double wheigth);
         public abstract void ClearEdges();
         public abstract bool Contains(TVertex vertex);
         public abstract bool AreConected(TVertex a, TVertex b);
