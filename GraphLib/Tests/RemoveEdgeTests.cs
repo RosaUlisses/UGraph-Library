@@ -34,14 +34,14 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && directedEdgeList.AreConected(0, i);
+                result = result && directedEdgeList.AreConnected(0, i);
             }
 
             directedEdgeList.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !directedEdgeList.AreConected(0, i);
+                result = result && !directedEdgeList.AreConnected(0, i);
             }
 
             Assert.True(result);
@@ -64,16 +64,16 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && undirectedEdgeList.AreConected(0, i)
-                                && undirectedEdgeList.AreConected(i, 0);
+                result = result && undirectedEdgeList.AreConnected(0, i)
+                                && undirectedEdgeList.AreConnected(i, 0);
             }
 
             undirectedEdgeList.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !undirectedEdgeList.AreConected(0, i)
-                                && !undirectedEdgeList.AreConected(i, 0);
+                result = result && !undirectedEdgeList.AreConnected(0, i)
+                                && !undirectedEdgeList.AreConnected(i, 0);
             }
 
             Assert.True(result);
@@ -96,14 +96,14 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && directedAdjacencyList.AreConected(0, i);
+                result = result && directedAdjacencyList.AreConnected(0, i);
             }
 
             directedAdjacencyList.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !directedAdjacencyList.AreConected(0, i);
+                result = result && !directedAdjacencyList.AreConnected(0, i);
             }
 
             Assert.True(result);
@@ -126,16 +126,16 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && undirectedAdjacencyList.AreConected(0, i)
-                                && undirectedAdjacencyList.AreConected(i, 0);
+                result = result && undirectedAdjacencyList.AreConnected(0, i)
+                                && undirectedAdjacencyList.AreConnected(i, 0);
             }
 
             undirectedAdjacencyList.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !undirectedAdjacencyList.AreConected(0, i)
-                                && !undirectedAdjacencyList.AreConected(i, 0);
+                result = result && !undirectedAdjacencyList.AreConnected(0, i)
+                                && !undirectedAdjacencyList.AreConnected(i, 0);
             }
 
             Assert.True(result);
@@ -158,14 +158,14 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && directedAdjacencyMatrix.AreConected(0, i);
+                result = result && directedAdjacencyMatrix.AreConnected(0, i);
             }
 
             directedAdjacencyMatrix.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !directedAdjacencyMatrix.AreConected(0, i);
+                result = result && !directedAdjacencyMatrix.AreConnected(0, i);
             }
 
             Assert.True(result);
@@ -188,16 +188,16 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && undirectedAdjacencyMatrix.AreConected(0, i)
-                                && undirectedAdjacencyMatrix.AreConected(i, 0);
+                result = result && undirectedAdjacencyMatrix.AreConnected(0, i)
+                                && undirectedAdjacencyMatrix.AreConnected(i, 0);
             }
 
             undirectedAdjacencyMatrix.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !undirectedAdjacencyMatrix.AreConected(0, i)
-                                && !undirectedAdjacencyMatrix.AreConected(i, 0);
+                result = result && !undirectedAdjacencyMatrix.AreConnected(0, i)
+                                && !undirectedAdjacencyMatrix.AreConnected(i, 0);
             }
 
             Assert.True(result);
@@ -220,14 +220,14 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && directedIncidenceMatrix.AreConected(0, i);
+                result = result && directedIncidenceMatrix.AreConnected(0, i);
             }
 
             directedIncidenceMatrix.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !directedIncidenceMatrix.AreConected(0, i);
+                result = result && !directedIncidenceMatrix.AreConnected(0, i);
             }
 
             Assert.True(result);
@@ -250,16 +250,16 @@ namespace Tests
             bool result = true;
             for (int i = 0; i < 10; i++)
             {
-                result = result && undirectedIncidenceMatrix.AreConected(0, i)
-                                && undirectedIncidenceMatrix.AreConected(i, 0);
+                result = result && undirectedIncidenceMatrix.AreConnected(0, i)
+                                && undirectedIncidenceMatrix.AreConnected(i, 0);
             }
 
             undirectedIncidenceMatrix.ClearEdges();
 
             for (int i = 0; i < 10; i++)
             {
-                result = result && !undirectedIncidenceMatrix.AreConected(0, i)
-                                && !undirectedIncidenceMatrix.AreConected(i, 0);
+                result = result && !undirectedIncidenceMatrix.AreConnected(0, i)
+                                && !undirectedIncidenceMatrix.AreConnected(i, 0);
             }
 
             Assert.True(result);

@@ -106,6 +106,48 @@ namespace UGraph.AdjacencyList
             }
         }
 
+        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
+        {
+            bool result = adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination));
+            if (result)
+            {
+                adjacency_lists[edge.Source].Add(new OutEdge<TVertex>(edge.Destination, weight));
+            }
+
+            return result;
+        }
+        
+        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
+        {
+             bool result = adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination)) 
+                           && adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source, weight));
+             if (result)
+             {
+                 adjacency_lists[edge.Source].Add(new OutEdge<TVertex>(edge.Destination, weight));
+                 adjacency_lists[edge.Destination].Add(new OutEdge<TVertex>(edge.Source, weight));
+             }
+ 
+             return result;           
+        }
+
+        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
+        {
+            bool result;
+            if (graphType == typeof(Directed))
+            {
+                result = UpdateEdgeWeightDirectedGraph(edge, weight);
+            }
+            else
+            {
+                result = UpdateEdgeWeightUndirectedGraph(edge, weight);
+            }
+
+            if (!result)
+            {
+                // Levantar excecao
+            }
+        }
+
         private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
         {
             adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWeight())); 
@@ -147,7 +189,7 @@ namespace UGraph.AdjacencyList
             return adjacency_lists.ContainsKey(vertex);
         }
 
-        public override bool AreConected(TVertex a, TVertex b)
+        public override bool AreConnected(TVertex a, TVertex b)
         {
             try
             {

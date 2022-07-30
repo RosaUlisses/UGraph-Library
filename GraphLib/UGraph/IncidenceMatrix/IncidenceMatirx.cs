@@ -33,8 +33,8 @@ namespace UGraph.IncidenceMatrix
             index_vertex_map = new Dictionary<int, TVertex>();
             index_edge_map = new Dictionary<Edge<TVertex>, int>();
             current_vertex = null;
-        } 
-        
+        }
+
         public override bool MoveIterator()
         {
             if (current_vertex is null)
@@ -49,18 +49,18 @@ namespace UGraph.IncidenceMatrix
             }
 
             return true;
-        }       
-        
+        }
+
         public override TVertex GetIteratorValue()
         {
             return current_vertex.Current;
         }
-        
+
         public override void ResetIterator()
         {
             current_vertex = vertex_index_map.Keys.GetEnumerator();
         }
-        
+
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
@@ -76,6 +76,7 @@ namespace UGraph.IncidenceMatrix
                 vertex_index_map.Add(vertex, index);
                 index_vertex_map.Add(index, vertex);
             }
+
             Count++;
         }
 
@@ -84,25 +85,27 @@ namespace UGraph.IncidenceMatrix
             try
             {
                 int index = vertex_index_map[vertex];
-                 empty_vertex_indexes.Push(index);
-                 for (int i = 0; i < matrix[index].Count; i++)
-                 {
-                     if (matrix[index][i] != EMPTY_EDGE)
-                     {
-                         for (int j = 0; j < matrix.Count; j++)
-                         {
-                             if (matrix[j][i] != EMPTY_EDGE)
-                             {
-                                 matrix[j][i] = EMPTY_EDGE;
-                                 break;
-                             }
-                         }
-                     }
-                     matrix[index][i] = EMPTY_EDGE;
-                 }
-                 vertex_index_map.Remove(vertex);
-                 index_vertex_map.Remove(index);
-                 Count--;               
+                empty_vertex_indexes.Push(index);
+                for (int i = 0; i < matrix[index].Count; i++)
+                {
+                    if (matrix[index][i] != EMPTY_EDGE)
+                    {
+                        for (int j = 0; j < matrix.Count; j++)
+                        {
+                            if (matrix[j][i] != EMPTY_EDGE)
+                            {
+                                matrix[j][i] = EMPTY_EDGE;
+                                break;
+                            }
+                        }
+                    }
+
+                    matrix[index][i] = EMPTY_EDGE;
+                }
+
+                vertex_index_map.Remove(vertex);
+                index_vertex_map.Remove(index);
+                Count--;
             }
             catch (ArgumentNullException e)
             {
@@ -113,41 +116,44 @@ namespace UGraph.IncidenceMatrix
                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
             }
         }
-        
+
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-             if (empty_edge_indexes.Count == 0)
-             {
-                 foreach (List<double?> list in matrix)
-                 {
-                    list.Add(0); 
-                 }
-                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
-                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
+            if (empty_edge_indexes.Count == 0)
+            {
+                foreach (List<double?> list in matrix)
+                {
+                    list.Add(0);
+                }
+
+                matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
+                matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
                 index_edge_map.Add(edge, matrix[0].Count - 1);
                 if (!edge.Source.Equals(edge.Destination))
                 {
-                    index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight), matrix[0].Count - 1);
+                    index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight),
+                        matrix[0].Count - 1);
                 }
-             }
-             else
-             {
-                 int index = empty_edge_indexes.Pop();
-                 matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
-                 matrix[vertex_index_map[edge.GetDestination()]][index] = edge.GetWeight();
+            }
+            else
+            {
+                int index = empty_edge_indexes.Pop();
+                matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
+                matrix[vertex_index_map[edge.GetDestination()]][index] = edge.GetWeight();
                 index_edge_map.Add(edge, index);
                 index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight), index);
-             }                   
+            }
         }
-        
+
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
             if (empty_edge_indexes.Count == 0)
             {
                 foreach (List<double?> list in matrix)
                 {
-                   list.Add(0); 
+                    list.Add(0);
                 }
+
                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
                 index_edge_map.Add(edge, matrix[0].Count - 1);
@@ -160,7 +166,7 @@ namespace UGraph.IncidenceMatrix
                 index_edge_map.Add(edge, index);
             }
         }
-        
+
         public override void AddEdge(Edge<TVertex> edge)
         {
             try
@@ -177,7 +183,66 @@ namespace UGraph.IncidenceMatrix
                 throw new InvalidEdgeException($"Edge {edge} is not valid");
             }
         }
-        
+
+        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
+        {
+            bool result = index_edge_map.ContainsKey(edge);
+            if (result)
+            {
+                int index = index_edge_map[edge];
+                for (int i = 0; i < matrix.Count; i++)
+                {
+                    if (matrix[i][index] != 0 && matrix[i][index] != null)
+                    {
+                        matrix[i][index] = weight;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
+        {
+            bool result = index_edge_map.ContainsKey(edge) && index_edge_map.ContainsKey(edge);
+            if (result)
+            {
+                int index = index_edge_map[edge];
+                int count = 0;
+                for (int i = 0; i < matrix.Count; i++)
+                {
+                    if (matrix[i][index] != 0 && matrix[i][index] != null)
+                    {
+                        matrix[i][index] = weight;
+                        count++;
+                    }
+
+                    if (count == 2) break;
+                }
+            }
+
+            return result;
+        }
+
+        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
+        {
+            bool result;
+            if (graphType == typeof(Directed))
+            {
+                result = UpdateEdgeWeightDirectedGraph(edge, weight);
+            }
+            else
+            {
+                result = UpdateEdgeWeightUndirectedGraph(edge, weight);
+            }
+
+            if (!result)
+            {
+                // Levantar excecao
+            }
+        }
+
         public override void RemoveEdge(Edge<TVertex> edge)
         {
             try
@@ -194,6 +259,7 @@ namespace UGraph.IncidenceMatrix
 
                     if (counter == 2) break;
                 }
+
                 empty_edge_indexes.Push(index);
                 index_edge_map.Remove(edge);
             }
@@ -214,14 +280,14 @@ namespace UGraph.IncidenceMatrix
                 for (int j = 0; j < matrix[0].Count; j++)
                 {
                     matrix[i][j] = 0;
-                } 
+                }
             }
 
             for (int i = 0; i < matrix[0].Count; i++)
             {
                 empty_edge_indexes.Push(i);
             }
-            
+
             index_edge_map.Clear();
         }
 
@@ -230,11 +296,11 @@ namespace UGraph.IncidenceMatrix
             return vertex_index_map.ContainsKey(vertex);
         }
 
-        public override bool AreConected(TVertex a, TVertex b)
+        public override bool AreConnected(TVertex a, TVertex b)
         {
             return index_edge_map.ContainsKey(new Edge<TVertex>(a, b));
         }
-        
+
         public override int GetCount()
         {
             return Count;
@@ -252,14 +318,16 @@ namespace UGraph.IncidenceMatrix
                     {
                         for (int j = 0; j < matrix.Count; j++)
                         {
-                            if ((graphType == typeof(Directed) && matrix[j][i] == null) || (graphType == typeof(Undirected) && matrix[j][i] != 0))
+                            if ((graphType == typeof(Directed) && matrix[j][i] == null) ||
+                                (graphType == typeof(Undirected) && matrix[j][i] != 0))
                             {
-                                adjacents.Add(new OutEdge<TVertex>(index_vertex_map[j], (double) matrix[index][i]));
+                                adjacents.Add(new OutEdge<TVertex>(index_vertex_map[j], (double)matrix[index][i]));
                                 break;
                             }
                         }
                     }
                 }
+
                 return adjacents.GetEnumerator();
             }
             catch (ArgumentNullException e)
@@ -274,34 +342,36 @@ namespace UGraph.IncidenceMatrix
 
         public override List<TVertex> GetAdjacencyList(TVertex vertex)
         {
-             List<TVertex> adjacents = new List<TVertex>();
-             try
-             {
-                 int index = vertex_index_map[vertex];
-                 for (int i = 0; i < matrix[index].Count; i++)
-                 {
-                     if (matrix[index][i] != null && matrix[index][i] != 0)
-                     {
-                         for (int j = 0; j < matrix.Count; j++)
-                         {
-                             if ((graphType == typeof(Directed) && matrix[j][i] == null) || (graphType == typeof(Undirected) && matrix[j][i] != 0))
-                             {
-                                 adjacents.Add(index_vertex_map[j]);
-                                 break;
-                             }
-                         }
-                     }
-                 }
-                 return adjacents;
-             }
-             catch (ArgumentNullException e)
-             {
-                 throw new InvalidVertexException("A vertex can not be null");
-             }
-             catch (KeyNotFoundException e)
-             {
-                 throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
-             }           
+            List<TVertex> adjacents = new List<TVertex>();
+            try
+            {
+                int index = vertex_index_map[vertex];
+                for (int i = 0; i < matrix[index].Count; i++)
+                {
+                    if (matrix[index][i] != null && matrix[index][i] != 0)
+                    {
+                        for (int j = 0; j < matrix.Count; j++)
+                        {
+                            if ((graphType == typeof(Directed) && matrix[j][i] == null) ||
+                                (graphType == typeof(Undirected) && matrix[j][i] != 0))
+                            {
+                                adjacents.Add(index_vertex_map[j]);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return adjacents;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new InvalidVertexException("A vertex can not be null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            }
         }
     }
 }

@@ -106,6 +106,47 @@ namespace UGraph.EdgeList
             else AddEdgeUndirectedGraph(edge);
         }
 
+        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
+        {
+            bool result = edge_list.Remove(edge);
+            if (result)
+            {
+                edge_list.Add(new Edge<TVertex>(edge.Source, edge.Destination, weight));
+            }
+
+            return result;
+        }
+
+        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
+        {
+            bool result = edge_list.Remove(edge) && edge_list.Remove(edge);
+            if (result)
+            {
+                edge_list.Add(new Edge<TVertex>(edge.Source, edge.Destination, weight));
+                edge_list.Add(new Edge<TVertex>(edge.Destination, edge.Source, weight));
+            }
+
+            return result;
+        }
+
+        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
+        {
+            bool result;
+            if (graphType == typeof(Directed))
+            {
+                result = UpdateEdgeWeightDirectedGraph(edge, weight);
+            }
+            else
+            {
+                result = UpdateEdgeWeightUndirectedGraph(edge, weight);
+            }
+
+            if (!result)
+            {
+                // Levantar excecao
+            }
+        }
+
         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
             edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
@@ -138,7 +179,7 @@ namespace UGraph.EdgeList
             edge_list.Clear();
         }
 
-        public override bool AreConected(TVertex a, TVertex b)
+        public override bool AreConnected(TVertex a, TVertex b)
         {
             if (a == null || b == null)
             {
