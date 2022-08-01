@@ -75,14 +75,14 @@ namespace UGraph
             return path;
         }
 
-        private List<TVertex> GetPathFromPredecesorMap(TVertex source, TVertex destination, Dictionary<TVertex, TVertex> predecesors)
+        private List<TVertex> GetPathFromPredecesorMap(TVertex source, TVertex destination, Dictionary<TVertex, TVertex> predecessors)
         {
             LinkedList<TVertex> path = new LinkedList<TVertex>();
             TVertex current = destination;
             while (!current.Equals(source))
             {
                 path.AddFirst(current);
-                current = predecesors[current];
+                current = predecessors[current];
             }
             path.AddFirst(current);
             return path.ToList();
@@ -92,7 +92,7 @@ namespace UGraph
         {
              Queue<TVertex> queue = new Queue<TVertex>();
              HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
-             Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+             Dictionary<TVertex, TVertex> predecessors = new Dictionary<TVertex, TVertex>();
              queue.Enqueue(source);
              List<TVertex> path  = new List<TVertex>();
 
@@ -106,14 +106,14 @@ namespace UGraph
                      if (!visitedVertexes.Contains(adjacents.Current.Destination))
                      {
                          queue.Enqueue(adjacents.Current.Destination);
-                         predecesors.Add(adjacents.Current.Destination, vertex);
+                         predecessors.Add(adjacents.Current.Destination, vertex);
                      }
                  } 
              }
 
              if (visitedVertexes.Contains(destination))
              {
-                 path = GetPathFromPredecesorMap(source, destination, predecesors);
+                 path = GetPathFromPredecesorMap(source, destination, predecessors);
              }
              return path;
         }
@@ -220,12 +220,12 @@ namespace UGraph
             return map;
         }
 
-        private void RelaxEdge(Edge<TVertex> edge, Dictionary<TVertex, double> distances, Dictionary<TVertex, TVertex> predecesors)
+        private void RelaxEdge(Edge<TVertex> edge, Dictionary<TVertex, double> distances, Dictionary<TVertex, TVertex> predecessors)
         {
             if (distances[edge.Destination] > distances[edge.Source] + edge.Weight)
             {
                 distances[edge.Destination] = distances[edge.Source] + edge.Weight;
-                predecesors[edge.Destination] = edge.Source;
+                predecessors[edge.Destination] = edge.Source;
             }
         }
         
@@ -234,7 +234,7 @@ namespace UGraph
             PriorityQueue<TVertex, double> queue = new PriorityQueue<TVertex, double>();
             Dictionary<TVertex, double> distances = InitDistanceMap();
             HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
-            Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+            Dictionary<TVertex, TVertex> predecessors = new Dictionary<TVertex, TVertex>();
             List<TVertex> path = new List<TVertex>();
             
             distances[source] = 0;
@@ -252,7 +252,7 @@ namespace UGraph
                 {
                     double previousDistance = distances[adjacents.Current.Destination];        
                     RelaxEdge(new Edge<TVertex>(current, adjacents.Current.Destination,
-                        adjacents.Current.Weight), distances, predecesors);
+                        adjacents.Current.Weight), distances, predecessors);
                     if (distances[current] + distances[adjacents.Current.Destination] < previousDistance)
                     {
                         queue.Enqueue(adjacents.Current.Destination, distances[current] + distances[adjacents.Current.Destination]);
@@ -263,7 +263,7 @@ namespace UGraph
             
             if (visitedVertexes.Contains(destination))
             {
-                 path = GetPathFromPredecesorMap(source, destination, predecesors);
+                 path = GetPathFromPredecesorMap(source, destination, predecessors);
             }
             return path;
         }
@@ -271,7 +271,7 @@ namespace UGraph
         public List<TVertex> BellmanFord(TVertex source, TVertex destination)
         {
             Dictionary<TVertex, double> distances = InitDistanceMap();
-            Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+            Dictionary<TVertex, TVertex> predecessors = new Dictionary<TVertex, TVertex>();
             List<TVertex> path = new List<TVertex>();
 
             distances[source] = 0;
@@ -280,13 +280,13 @@ namespace UGraph
                 IEnumerator<Edge<TVertex>> edges = GetAllEdges();
                 while (edges.MoveNext())
                 {
-                    RelaxEdge(edges.Current, distances, predecesors);
+                    RelaxEdge(edges.Current, distances, predecessors);
                 }
             }
 
-            if (predecesors.ContainsKey(destination))
+            if (predecessors.ContainsKey(destination))
             {
-                path = GetPathFromPredecesorMap(source, destination, predecesors);
+                path = GetPathFromPredecesorMap(source, destination, predecessors);
             }
 
             return path;
@@ -295,7 +295,7 @@ namespace UGraph
         public bool HasNegativeCycles(TVertex source)
         {
             Dictionary<TVertex, double> distances = InitDistanceMap();
-            Dictionary<TVertex, TVertex> predecesors = new Dictionary<TVertex, TVertex>();
+            Dictionary<TVertex, TVertex> predecessors = new Dictionary<TVertex, TVertex>();
             List<TVertex> path = new List<TVertex>();
             IEnumerator<Edge<TVertex>> edges;
             distances[source] = 0;
@@ -304,7 +304,7 @@ namespace UGraph
                  edges = GetAllEdges();
                  while (edges.MoveNext())
                  {
-                     RelaxEdge(edges.Current, distances, predecesors);
+                     RelaxEdge(edges.Current, distances, predecessors);
                  }
             }
 

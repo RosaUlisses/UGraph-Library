@@ -58,6 +58,7 @@ namespace UGraph.EdgeList
 
         public override void AddVertex(TVertex vertex)
         {
+            if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             vertexes.Add(vertex);
         }
 
@@ -70,12 +71,12 @@ namespace UGraph.EdgeList
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException("A vertex can not be null");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             }
 
             if (!result)
             {
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
         }
 
@@ -92,14 +93,20 @@ namespace UGraph.EdgeList
 
         public override void AddEdge(Edge<TVertex> edge)
         {
-            if (edge.Source == null || edge.Destination == null)
+            if (edge is null)
             {
-                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
+            }
+
+            if (edge.Source is null || edge.Destination is null)
+            {
+                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
             }
 
             if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
             {
-                throw new InvalidEdgeException($"Edge {edge} is not valid");
+                throw new InvalidEdgeException(
+                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
             }
 
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
@@ -131,6 +138,22 @@ namespace UGraph.EdgeList
 
         public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
         {
+            if (edge is null)
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
+            }
+
+            if (edge.Source is null || edge.Destination is null)
+            {
+                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
+            }
+
+            if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
+            {
+                throw new InvalidEdgeException(
+                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
+            }
+
             bool result;
             if (graphType == typeof(Directed))
             {
@@ -143,7 +166,7 @@ namespace UGraph.EdgeList
 
             if (!result)
             {
-                // Levantar excecao
+                throw new InvalidEdgeException($"Edge {nameof(edge)} does not exist in the graph");
             }
         }
 
@@ -160,14 +183,20 @@ namespace UGraph.EdgeList
 
         public override void RemoveEdge(Edge<TVertex> edge)
         {
-            if (edge.Source == null || edge.Destination == null)
+            if (edge is null)
             {
-                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
+            }
+
+            if (edge.Source is null || edge.Destination is null)
+            {
+                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
             }
 
             if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
             {
-                throw new InvalidEdgeException($"Edge {edge} is not valid");
+                throw new InvalidEdgeException(
+                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
             }
 
             if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
@@ -181,17 +210,16 @@ namespace UGraph.EdgeList
 
         public override bool AreConnected(TVertex a, TVertex b)
         {
-            if (a == null || b == null)
+            if (a is null || b is null)
             {
-                throw new InvalidEdgeException("A vertex can not be null");
+                throw new InvalidVertexException($"One or both of vertexes {a} and {b} are null");
             }
 
             if (!vertexes.Contains(a) || !vertexes.Contains(b))
             {
-                throw new InvalidEdgeException("Invalid vertexes");
+                throw new InvalidVertexException($"One or both of vertexes {a} and {b} do not exist in the graph");
             }
 
-            // Arrumar isso, ta horrivel
             return edge_list.Where(edge => edge.Source.Equals(a) && edge.Destination.Equals(b)).ToList().Count != 0;
         }
 
@@ -209,10 +237,11 @@ namespace UGraph.EdgeList
         {
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
 
-            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
+            if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             if (!vertexes.Contains(vertex))
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
-
+            {
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
+            }
 
             foreach (Edge<TVertex> edge in edge_list)
             {
@@ -229,9 +258,11 @@ namespace UGraph.EdgeList
         {
             List<TVertex> adjacents = new List<TVertex>();
 
-            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
-            if (!vertexes.Contains(vertex))
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+            if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
+            if (vertexes.Contains(vertex))
+            {
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
+            }
 
 
             foreach (Edge<TVertex> edge in edge_list)

@@ -28,5 +28,6 @@ g.AddEdge(new Edge<char>('c', 'z', 5));
 
 var p = g.Dijkstra('a', 'z');
 
+
 Console.WriteLine("oi");
 

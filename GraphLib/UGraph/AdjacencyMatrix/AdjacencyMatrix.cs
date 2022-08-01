@@ -59,7 +59,7 @@ namespace UGraph.AdjacencyMatrix
 
         public override void AddVertex(TVertex vertex)
         {
-            if (vertex is null) throw new InvalidVertexException("A vertex can not be null");
+            if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             if (empty_indexes.Count == 0)
             {
                 matrix.Add(new List<double>(new double[Count + 1]));
@@ -103,11 +103,11 @@ namespace UGraph.AdjacencyMatrix
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException("A vertex can not be null");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
         }
 
@@ -124,6 +124,11 @@ namespace UGraph.AdjacencyMatrix
 
         public override void AddEdge(Edge<TVertex> edge)
         {
+            if (edge is null)
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
+            }
+
             try
             {
                 if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
@@ -131,11 +136,12 @@ namespace UGraph.AdjacencyMatrix
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidEdgeException($"Edge {edge} is not valid");
+                throw new InvalidEdgeException(
+                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
             }
         }
 
@@ -165,18 +171,36 @@ namespace UGraph.AdjacencyMatrix
 
         public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
         {
-            bool result;
-            if (graphType == typeof(Directed))
+            if (edge is null)
             {
-                result = UpdateEdgeWeightDirectedGraph(edge, weight);
+                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
             }
-            else
+
+            try
             {
-                result = UpdateEdgeWeightUndirectedGraph(edge, weight);
+                bool result;
+                if (graphType == typeof(Directed))
+                {
+                    result = UpdateEdgeWeightDirectedGraph(edge, weight);
+                }
+                else
+                {
+                    result = UpdateEdgeWeightUndirectedGraph(edge, weight);
+                }
+
+                if (!result)
+                {
+                    throw new InvalidEdgeException($"Edge {nameof(edge)} does not exist in the graph");
+                }
             }
-            if (!result)
+            catch (ArgumentNullException e)
             {
-                // Levantar excecao
+                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new InvalidEdgeException(
+                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
             }
         }
 
@@ -193,6 +217,11 @@ namespace UGraph.AdjacencyMatrix
 
         public override void RemoveEdge(Edge<TVertex> edge)
         {
+            if (edge is null)
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
+            }
+
             try
             {
                 if (graphType == typeof(Directed)) RemoveEdgeDirectedGraph(edge);
@@ -200,11 +229,12 @@ namespace UGraph.AdjacencyMatrix
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidEdgeException($"Edge {edge} has invalid vertexes");
+                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidEdgeException($"Edge {edge} does not exist in the graph");
+                throw new InvalidEdgeException(
+                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
             }
         }
 
@@ -232,11 +262,11 @@ namespace UGraph.AdjacencyMatrix
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidEdgeException("A vertex can not be null");
+                throw new InvalidVertexException($"One or both of vertexes {a} and {b} are null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidEdgeException("Invalid vertexes");
+                throw new InvalidVertexException($"One or both of vertexes {a} and {b} do not exist in the graph");
             }
         }
 
@@ -263,11 +293,11 @@ namespace UGraph.AdjacencyMatrix
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException("A vertex can not be null");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
         }
 
@@ -289,11 +319,11 @@ namespace UGraph.AdjacencyMatrix
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException("A vertex can not be null");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {vertex} does not exist in the graph");
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
         }
     }
