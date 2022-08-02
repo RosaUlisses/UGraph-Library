@@ -60,25 +60,32 @@ namespace UGraph.AdjacencyMatrix
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
-            if (empty_indexes.Count == 0)
+            try
             {
-                matrix.Add(new List<double>(new double[Count + 1]));
-                foreach (List<double> list in matrix)
+                if (empty_indexes.Count == 0)
                 {
-                    list.Add(0);
+                    matrix.Add(new List<double>(new double[Count + 1]));
+                    foreach (List<double> list in matrix)
+                    {
+                        list.Add(0);
+                    }
+
+                    vertex_index_map.Add(vertex, matrix.Count - 1);
+                    index_vertex_map.Add(matrix.Count - 1, vertex);
+                }
+                else
+                {
+                    int index = empty_indexes.Pop();
+                    vertex_index_map.Add(vertex, index);
+                    index_vertex_map.Add(index, vertex);
                 }
 
-                vertex_index_map.Add(vertex, matrix.Count - 1);
-                index_vertex_map.Add(matrix.Count - 1, vertex);
+                Count++;
             }
-            else
+            catch (ArgumentException e)
             {
-                int index = empty_indexes.Pop();
-                vertex_index_map.Add(vertex, index);
-                index_vertex_map.Add(index, vertex);
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} already exists in the graph");
             }
-
-            Count++;
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -142,6 +149,10 @@ namespace UGraph.AdjacencyMatrix
             {
                 throw new InvalidEdgeException(
                     $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
+            }
+            catch (ArgumentException e)
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
             }
         }
 

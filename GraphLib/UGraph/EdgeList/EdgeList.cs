@@ -61,6 +61,11 @@ namespace UGraph.EdgeList
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
+            if (vertexes.Contains(vertex))
+            {
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} already exists in the graph");
+            }
+
             vertexes.Add(vertex);
         }
 
@@ -109,6 +114,11 @@ namespace UGraph.EdgeList
             {
                 throw new InvalidEdgeException(
                     $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
+            }
+
+            if (edge_list.Contains(edge))
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
             }
 
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);

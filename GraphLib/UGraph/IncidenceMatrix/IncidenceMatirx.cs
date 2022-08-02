@@ -64,20 +64,27 @@ namespace UGraph.IncidenceMatrix
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
-            if (empty_vertex_indexes.Count == 0)
+            try
             {
-                vertex_index_map.Add(vertex, matrix.Count);
-                index_vertex_map.Add(matrix.Count, vertex);
-                matrix.Add(new List<double?>());
-            }
-            else
-            {
-                int index = empty_vertex_indexes.Pop();
-                vertex_index_map.Add(vertex, index);
-                index_vertex_map.Add(index, vertex);
-            }
+                if (empty_vertex_indexes.Count == 0)
+                {
+                    vertex_index_map.Add(vertex, matrix.Count);
+                    index_vertex_map.Add(matrix.Count, vertex);
+                    matrix.Add(new List<double?>());
+                }
+                else
+                {
+                    int index = empty_vertex_indexes.Pop();
+                    vertex_index_map.Add(vertex, index);
+                    index_vertex_map.Add(index, vertex);
+                }
 
-            Count++;
+                Count++;
+            }
+            catch (ArgumentException e)
+            {
+                throw new InvalidVertexException($"Vertex {nameof(vertex)} already exists in the graph");
+            }
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -187,6 +194,10 @@ namespace UGraph.IncidenceMatrix
             {
                 throw new InvalidEdgeException(
                     $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
+            }
+            catch (ArgumentException e)
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
             }
         }
 

@@ -60,7 +60,14 @@ namespace UGraph.AdjacencyList
         public override void AddVertex(TVertex vertex)
         {
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
-            adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
+            try
+            {
+                adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
+            }
+            catch (ArgumentException e)
+            {
+                throw new InvalidEdgeException($"Vertex {nameof(vertex)} does not exist in the graph");
+            }
         }
 
         public override void RemoveVertex(TVertex vertex)
@@ -112,6 +119,11 @@ namespace UGraph.AdjacencyList
             {
                 throw new InvalidEdgeException(
                     $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
+            }
+
+            if (adjacency_lists[edge.Source].Contains(new OutEdge<TVertex>(edge.Destination, edge.Weight)))
+            {
+                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
             }
         }
 
