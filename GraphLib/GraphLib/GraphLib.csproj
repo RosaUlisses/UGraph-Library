@@ -34,4 +34,8 @@
     <ProjectReference Include="..\UGraph\UGraph.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Documentation Examples" />
+  </ItemGroup>
+
 </Project>

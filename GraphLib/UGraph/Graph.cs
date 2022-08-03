@@ -333,11 +333,11 @@ namespace UGraph
                  IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
                  while (adjacents.MoveNext())
                  {
-                     if (!visitedVertexes.Contains(adjacents.Current.Destination))
+                     if (visitedVertexes.Contains(adjacents.Current.Destination))
                      {
-                         stack.Push(adjacents.Current.Destination);
+                         return true;
                      }
-                     else return true;
+                     stack.Push(adjacents.Current.Destination);
                  } 
             }
             return false;

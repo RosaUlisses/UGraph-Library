@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UGraph.Propertys
 {
-    public class Directed : GraphType
+    public abstract class Directed : GraphType
     {
     }
 }
