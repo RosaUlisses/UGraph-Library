@@ -106,7 +106,7 @@ namespace UGraph
                      if (!visitedVertexes.Contains(adjacents.Current.Destination))
                      {
                          queue.Enqueue(adjacents.Current.Destination);
-                         if(predecessors.ContainsKey(adjacents.Current.Destination))
+                         if(!predecessors.ContainsKey(adjacents.Current.Destination))
                          {
                             predecessors.Add(adjacents.Current.Destination, vertex);
                          }
@@ -356,6 +356,65 @@ namespace UGraph
             
             return false;
         }
+
+        public Graph<TVertex, TGraphType> ToAdjacencyList()
+        {
+            Graph<TVertex, TGraphType> copy = new AdjacencyList<TVertex, TGraphType>();
+            foreach(TVertex vertex in this)
+            {
+                copy.AddVertex(vertex);
+            }
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                copy.AddEdge(edges.Current);
+            }
+            return copy;
+        }
+
+        public Graph<TVertex, TGraphType> ToAdjacencyMatrix()
+        {
+            Graph<TVertex, TGraphType> copy = new AdjacencyMatrix<TVertex, TGraphType>();
+            foreach(TVertex vertex in this)
+            {
+                copy.AddVertex(vertex);
+            }
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                copy.AddEdge(edges.Current);
+            }
+            return copy;
+        }
+
+        public Graph<TVertex, TGraphType> ToEdgeList()
+        {
+            Graph<TVertex, TGraphType> copy = new EdgeList<TVertex, TGraphType>();
+            foreach(TVertex vertex in this)
+            {
+                copy.AddVertex(vertex);
+            }
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                copy.AddEdge(edges.Current);
+            }
+            return copy;
+        }
+
+        public Graph<TVertex, TGraphType> ToIncidenceMatrix()
+        {
+            Graph<TVertex, TGraphType> copy = new IncidenceMatrix<TVertex, TGraphType>();
+            foreach(TVertex vertex in this)
+            {
+                copy.AddVertex(vertex);
+            }
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                copy.AddEdge(edges.Current);
+            }
+            return copy;
+        }
     }
-    
 }
