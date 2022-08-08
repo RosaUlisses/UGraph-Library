@@ -11,23 +11,17 @@ using UGraph.AdjacencyMatrix;
 using UGraph.IncidenceMatrix;
 
 Graph<char, Directed> g = new IncidenceMatrix<char, Directed>();
+Graph<char, Directed> g2 = new IncidenceMatrix<char, Directed>();
 
 g.AddVertex('a');
 g.AddVertex('c');
 g.AddVertex('e');
-g.AddVertex('y');
-g.AddVertex('z');
-g.AddVertex('u');
 
-g.AddEdge(new Edge<char>('a', 'c', 1));
-g.AddEdge(new Edge<char>('a', 'e', 2));
-g.AddEdge(new Edge<char>('e', 'z', 3));
-g.AddEdge(new Edge<char>('e', 'y', 4));
-g.AddEdge(new Edge<char>('z', 'u', 3));
-g.AddEdge(new Edge<char>('c', 'z', 5));
+g2.AddVertex('a');
+g2.AddVertex('c');
+g2.AddVertex('e');
 
-var p = g.Dijkstra('a', 'z');
+g.AddEdge(new Edge<char>('a', 'c'));
 
-
-Console.WriteLine("oi");
+Console.WriteLine(g.Equals(g2));
 
