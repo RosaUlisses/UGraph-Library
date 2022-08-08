@@ -106,7 +106,10 @@ namespace UGraph
                      if (!visitedVertexes.Contains(adjacents.Current.Destination))
                      {
                          queue.Enqueue(adjacents.Current.Destination);
-                         predecessors.Add(adjacents.Current.Destination, vertex);
+                         if(predecessors.ContainsKey(adjacents.Current.Destination))
+                         {
+                            predecessors.Add(adjacents.Current.Destination, vertex);
+                         }
                      }
                  } 
              }
@@ -185,9 +188,7 @@ namespace UGraph
 
         public List<TVertex> TopologicalSort()
         { 
-            // Levantar excecao se o grafo nao for um DAG (direcionado aciclico) ???? 
             List<Tuple<TVertex, int, int>> timesDFS = DepthFirstSearch();
-            // Rever esse return porque esta ruim !!!!
             return timesDFS
                 .OrderBy(value => value.Item3)
                 .Select(value => value.Item1)
