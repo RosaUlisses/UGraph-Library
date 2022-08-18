@@ -150,69 +150,6 @@ namespace UGraph.AdjacencyMatrix
                 throw new InvalidEdgeException(
                     $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
             }
-            catch (ArgumentException e)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
-            }
-        }
-
-        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = matrix[vertex_index_map[edge.Source]][vertex_index_map[edge.Destination]] != 0;
-            if (result)
-            {
-                matrix[vertex_index_map[edge.Source]][vertex_index_map[edge.Destination]] = weight;
-            }
-
-            return result;
-        }
-
-        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = matrix[vertex_index_map[edge.Source]][vertex_index_map[edge.Destination]] != 0
-                          && matrix[vertex_index_map[edge.Destination]][vertex_index_map[edge.Source]] != 0;
-            if (result)
-            {
-                matrix[vertex_index_map[edge.Source]][vertex_index_map[edge.Destination]] = weight;
-                matrix[vertex_index_map[edge.Destination]][vertex_index_map[edge.Source]] = weight;
-            }
-
-            return result;
-        }
-
-        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
-        {
-            if (edge is null)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
-            }
-
-            try
-            {
-                bool result;
-                if (graphType == typeof(Directed))
-                {
-                    result = UpdateEdgeWeightDirectedGraph(edge, weight);
-                }
-                else
-                {
-                    result = UpdateEdgeWeightUndirectedGraph(edge, weight);
-                }
-
-                if (!result)
-                {
-                    throw new InvalidEdgeException($"Edge {nameof(edge)} does not exist in the graph");
-                }
-            }
-            catch (ArgumentNullException e)
-            {
-                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
-            }
-            catch (KeyNotFoundException e)
-            {
-                throw new InvalidEdgeException(
-                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
-            }
         }
 
         private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)

@@ -9,20 +9,13 @@ namespace UGraph.Edge
         public TVertex Destination { get; }
         public double Weight { get; }
 
-        public Edge(TVertex source, TVertex destination, double weight)
+        public Edge(TVertex source, TVertex destination, double weight = 1)
         {
             Source = source;
             Destination = destination;
             Weight = weight;
         }
-
-        public Edge(TVertex source, TVertex destination)
-        {
-            Source = source;
-            Destination = destination;
-            Weight = 1;
-        }
-
+        
         public TVertex GetSource()
         {
             return Source;

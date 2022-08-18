@@ -118,68 +118,12 @@ namespace UGraph.EdgeList
 
             if (edge_list.Contains(edge))
             {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
+                edge_list.Remove(edge);
+                if (graphType == typeof(Undirected)) edge_list.Remove(new Edge<TVertex>(edge.Destination, edge.Source));
             }
 
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
             else AddEdgeUndirectedGraph(edge);
-        }
-
-        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = edge_list.Remove(edge);
-            if (result)
-            {
-                edge_list.Add(new Edge<TVertex>(edge.Source, edge.Destination, weight));
-            }
-
-            return result;
-        }
-
-        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = edge_list.Remove(edge) && edge_list.Remove(edge);
-            if (result)
-            {
-                edge_list.Add(new Edge<TVertex>(edge.Source, edge.Destination, weight));
-                edge_list.Add(new Edge<TVertex>(edge.Destination, edge.Source, weight));
-            }
-
-            return result;
-        }
-
-        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
-        {
-            if (edge is null)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
-            }
-
-            if (edge.Source is null || edge.Destination is null)
-            {
-                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
-            }
-
-            if (!vertexes.Contains(edge.Source) || !vertexes.Contains(edge.Destination))
-            {
-                throw new InvalidEdgeException(
-                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
-            }
-
-            bool result;
-            if (graphType == typeof(Directed))
-            {
-                result = UpdateEdgeWeightDirectedGraph(edge, weight);
-            }
-            else
-            {
-                result = UpdateEdgeWeightUndirectedGraph(edge, weight);
-            }
-
-            if (!result)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} does not exist in the graph");
-            }
         }
 
         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)

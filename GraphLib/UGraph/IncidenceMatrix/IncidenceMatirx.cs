@@ -126,6 +126,13 @@ namespace UGraph.IncidenceMatrix
 
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
+            if (index_edge_map.ContainsKey(edge))
+            {
+                matrix[vertex_index_map[edge.Source]][index_edge_map[edge]] = edge.Weight;
+                matrix[vertex_index_map[edge.Destination]][index_edge_map[edge]] = edge.Weight;
+                return;
+            }
+
             if (empty_edge_indexes.Count == 0)
             {
                 foreach (List<double?> list in matrix)
@@ -135,11 +142,10 @@ namespace UGraph.IncidenceMatrix
 
                 matrix[vertex_index_map[edge.GetSource()]][matrix[0].Count - 1] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][matrix[0].Count - 1] = null;
-                index_edge_map.Add(edge, matrix[0].Count - 1);
+                index_edge_map[edge] = matrix[0].Count - 1;
                 if (!edge.Source.Equals(edge.Destination))
                 {
-                    index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight),
-                        matrix[0].Count - 1);
+                    index_edge_map[new Edge<TVertex>(edge.Destination, edge.Source)] = matrix[0].Count - 1;
                 }
             }
             else
@@ -147,13 +153,20 @@ namespace UGraph.IncidenceMatrix
                 int index = empty_edge_indexes.Pop();
                 matrix[vertex_index_map[edge.GetSource()]][index] = edge.GetWeight();
                 matrix[vertex_index_map[edge.GetDestination()]][index] = edge.GetWeight();
-                index_edge_map.Add(edge, index);
-                index_edge_map.Add(new Edge<TVertex>(edge.Destination, edge.Source, edge.Weight), index);
+                index_edge_map[edge] = index;
+                index_edge_map[new Edge<TVertex>(edge.Destination, edge.Source)] = index;
             }
         }
 
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
+            if (index_edge_map.ContainsKey(edge))
+            {
+                matrix[vertex_index_map[edge.Source]][index_edge_map[edge]] = edge.Weight;
+                matrix[vertex_index_map[edge.Destination]][index_edge_map[edge]] = null;
+                return;
+            }
+
             if (empty_edge_indexes.Count == 0)
             {
                 foreach (List<double?> list in matrix)
@@ -185,86 +198,6 @@ namespace UGraph.IncidenceMatrix
             {
                 if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
                 else AddEdgeUndirectedGraph(edge);
-            }
-            catch (ArgumentNullException e)
-            {
-                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
-            }
-            catch (KeyNotFoundException e)
-            {
-                throw new InvalidEdgeException(
-                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
-            }
-            catch (ArgumentException e)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
-            }
-        }
-
-        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = index_edge_map.ContainsKey(edge);
-            if (result)
-            {
-                int index = index_edge_map[edge];
-                for (int i = 0; i < matrix.Count; i++)
-                {
-                    if (matrix[i][index] != 0 && matrix[i][index] != null)
-                    {
-                        matrix[i][index] = weight;
-                        break;
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = index_edge_map.ContainsKey(edge) && index_edge_map.ContainsKey(edge);
-            if (result)
-            {
-                int index = index_edge_map[edge];
-                int count = 0;
-                for (int i = 0; i < matrix.Count; i++)
-                {
-                    if (matrix[i][index] != 0 && matrix[i][index] != null)
-                    {
-                        matrix[i][index] = weight;
-                        count++;
-                    }
-
-                    if (count == 2) break;
-                }
-            }
-
-            return result;
-        }
-
-        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
-        {
-            if (edge is null)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
-            }
-
-            try
-            {
-                bool result;
-                if (graphType == typeof(Directed))
-                {
-                    result = UpdateEdgeWeightDirectedGraph(edge, weight);
-                }
-                else
-                {
-                    result = UpdateEdgeWeightUndirectedGraph(edge, weight);
-                }
-
-                if (!result)
-                {
-                    throw new InvalidEdgeException($"Edge {nameof(edge)} does not exist in the graph");
-                }
             }
             catch (ArgumentNullException e)
             {

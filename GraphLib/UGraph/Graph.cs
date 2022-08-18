@@ -43,7 +43,6 @@ namespace UGraph
         public abstract void AddVertex(TVertex vertex);
         public abstract void RemoveVertex(TVertex vertex);
         public abstract void AddEdge(Edge<TVertex> edge);
-        public abstract void UpdateEdgeWeight(Edge<TVertex> edge, double weight);
         public abstract void RemoveEdge(Edge<TVertex> edge);
         public abstract void ClearEdges();
         public abstract bool Contains(TVertex vertex);

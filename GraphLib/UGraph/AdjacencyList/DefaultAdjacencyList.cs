@@ -108,72 +108,13 @@ namespace UGraph.AdjacencyList
 
             try
             {
+                if (adjacency_lists[edge.Source].Contains(new OutEdge<TVertex>(edge.Destination, edge.Weight)))
+                {
+                    adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination));
+                    if (graphType == typeof(Undirected)) adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source));
+                }
                 if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
                 else AddEdgeUndirectedGraph(edge);
-            }
-            catch (ArgumentNullException e)
-            {
-                throw new InvalidEdgeException($"One or both vertexes of edge {nameof(edge)} are null");
-            }
-            catch (KeyNotFoundException e)
-            {
-                throw new InvalidEdgeException(
-                    $"One or both vertexes of edge {nameof(edge)} do not exist in the graph");
-            }
-
-            if (adjacency_lists[edge.Source].Contains(new OutEdge<TVertex>(edge.Destination, edge.Weight)))
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
-            }
-        }
-
-        private bool UpdateEdgeWeightDirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination));
-            if (result)
-            {
-                adjacency_lists[edge.Source].Add(new OutEdge<TVertex>(edge.Destination, weight));
-            }
-
-            return result;
-        }
-
-        private bool UpdateEdgeWeightUndirectedGraph(Edge<TVertex> edge, double weight)
-        {
-            bool result = adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination))
-                          && adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source, weight));
-            if (result)
-            {
-                adjacency_lists[edge.Source].Add(new OutEdge<TVertex>(edge.Destination, weight));
-                adjacency_lists[edge.Destination].Add(new OutEdge<TVertex>(edge.Source, weight));
-            }
-
-            return result;
-        }
-
-        public override void UpdateEdgeWeight(Edge<TVertex> edge, double weight)
-        {
-            if (edge is null)
-            {
-                throw new InvalidEdgeException($"Edge {nameof(edge)} is null");
-            }
-
-            try
-            {
-                bool result;
-                if (graphType == typeof(Directed))
-                {
-                    result = UpdateEdgeWeightDirectedGraph(edge, weight);
-                }
-                else
-                {
-                    result = UpdateEdgeWeightUndirectedGraph(edge, weight);
-                }
-
-                if (!result)
-                {
-                    throw new InvalidEdgeException($"Edge {nameof(edge)} does not exist in the graph");
-                }
             }
             catch (ArgumentNullException e)
             {
