@@ -323,6 +323,24 @@ namespace UGraph.IncidenceMatrix
             }
         }
 
+        protected override Graph<TVertex, TGraphType> GetTransposedGraph()
+        {
+            Graph<TVertex, TGraphType> transposedGraph = new IncidenceMatrix<TVertex, TGraphType>();
+            foreach (TVertex vertex in this)
+            {
+                transposedGraph.AddVertex(vertex);
+            }
+
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                transposedGraph.AddEdge(new Edge<TVertex>(edges.Current.Destination, edges.Current.Source,
+                    edges.Current.Weight));
+            }
+
+            return transposedGraph;
+        }
+
         public override List<TVertex> GetAdjacencyList(TVertex vertex)
         {
             List<TVertex> adjacents = new List<TVertex>();

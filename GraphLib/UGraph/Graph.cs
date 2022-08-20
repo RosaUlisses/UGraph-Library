@@ -49,7 +49,7 @@ namespace UGraph
         public abstract bool AreConnected(TVertex a, TVertex b);
         public abstract int GetCount();
         protected abstract IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex);
-
+        protected abstract Graph<TVertex, TGraphType> GetTransposedGraph();
         public abstract List<TVertex> GetAdjacencyList(TVertex vertex);
 
 

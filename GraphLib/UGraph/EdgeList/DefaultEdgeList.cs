@@ -197,6 +197,24 @@ namespace UGraph.EdgeList
             return Count;
         }
 
+        protected override Graph<TVertex, TGraphType> GetTransposedGraph()
+        {
+            Graph<TVertex, TGraphType> transposedGraph = new EdgeList<TVertex, TGraphType>();
+            foreach (TVertex vertex in this)
+            {
+                transposedGraph.AddVertex(vertex);
+            }
+
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                transposedGraph.AddEdge(new Edge<TVertex>(edges.Current.Destination, edges.Current.Source,
+                    edges.Current.Weight));
+            }
+
+            return transposedGraph;
+        }
+
         protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
         {
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();

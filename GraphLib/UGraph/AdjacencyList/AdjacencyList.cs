@@ -114,8 +114,10 @@ namespace UGraph.AdjacencyList
                 if (adjacency_lists[edge.Source].Contains(new OutEdge<TVertex>(edge.Destination, edge.Weight)))
                 {
                     adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination));
-                    if (graphType == typeof(Undirected)) adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source));
+                    if (graphType == typeof(Undirected))
+                        adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source));
                 }
+
                 if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
                 else AddEdgeUndirectedGraph(edge);
             }
@@ -212,6 +214,24 @@ namespace UGraph.AdjacencyList
             {
                 throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
+        }
+
+        protected override Graph<TVertex, TGraphType> GetTransposedGraph()
+        {
+            Graph<TVertex, TGraphType> transposedGraph = new AdjacencyList<TVertex, TGraphType, TList, TMap>();
+            foreach (TVertex vertex in this)
+            {
+                transposedGraph.AddVertex(vertex);
+            }
+
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                transposedGraph.AddEdge(new Edge<TVertex>(edges.Current.Destination, edges.Current.Source,
+                    edges.Current.Weight));
+            }
+
+            return transposedGraph;
         }
 
         public override List<TVertex> GetAdjacencyList(TVertex vertex)

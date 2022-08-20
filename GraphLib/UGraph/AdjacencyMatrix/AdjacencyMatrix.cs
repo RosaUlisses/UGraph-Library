@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UGraph.AdjacencyList;
 using UGraph.Propertys;
 using UGraph.Edge;
 using UGraph.Exceptions;
@@ -247,6 +248,24 @@ namespace UGraph.AdjacencyMatrix
             {
                 throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
+        }
+
+        protected override Graph<TVertex, TGraphType> GetTransposedGraph()
+        {
+            Graph<TVertex, TGraphType> transposedGraph = new AdjacencyMatrix<TVertex, TGraphType>();
+            foreach (TVertex vertex in this)
+            {
+                transposedGraph.AddVertex(vertex);
+            }
+
+            IEnumerator<Edge<TVertex>> edges = GetAllEdges();
+            while (edges.MoveNext())
+            {
+                transposedGraph.AddEdge(new Edge<TVertex>(edges.Current.Destination, edges.Current.Source,
+                    edges.Current.Weight));
+            }
+
+            return transposedGraph;
         }
 
         public override List<TVertex> GetAdjacencyList(TVertex vertex)
