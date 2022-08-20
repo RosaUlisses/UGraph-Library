@@ -35,6 +35,35 @@ namespace UGraph.IncidenceMatrix
             current_vertex = null;
         }
 
+
+        public IncidenceMatrix(Graph<TVertex, TGraphType> graph)
+        {
+            if (graph is null)
+            {
+                throw new InvalidGraphException($"Graph {nameof(graph)} is null");
+            }
+
+            graphType = typeof(TGraphType);
+            matrix = new List<List<double?>>();
+            empty_vertex_indexes = new Stack<int>();
+            empty_edge_indexes = new Stack<int>();
+            vertex_index_map = new Dictionary<TVertex, int>();
+            index_vertex_map = new Dictionary<int, TVertex>();
+            index_edge_map = new Dictionary<Edge<TVertex>, int>();
+            current_vertex = null;
+
+            foreach (TVertex vertex in graph)
+            {
+                AddVertex(vertex);
+            }
+
+            IEnumerator<Edge<TVertex>> edges = graph.GetAllEdges();
+            while (edges.MoveNext())
+            {
+                AddEdge(new Edge<TVertex>(edges.Current.Source, edges.Current.Destination, edges.Current.Weight));
+            }
+        }
+
         public override bool MoveIterator()
         {
             if (current_vertex is null)

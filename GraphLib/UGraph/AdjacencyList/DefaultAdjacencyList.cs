@@ -31,6 +31,29 @@ namespace UGraph.AdjacencyList
             current_vertex = null;
         }
 
+        public AdjacencyList(Graph<TVertex, TGraphType> graph)
+        {
+            if (graph is null)
+            {
+                throw new InvalidGraphException($"Graph {nameof(graph)} is null");
+            }
+
+            adjacency_lists = new Dictionary<TVertex, List<OutEdge<TVertex>>>();
+            graphType = typeof(TGraphType);
+            current_vertex = null;
+
+            foreach (TVertex vertex in graph)
+            {
+                AddVertex(vertex);
+            }
+
+            IEnumerator<Edge<TVertex>> edges = graph.GetAllEdges();
+            while (edges.MoveNext())
+            {
+                AddEdge(new Edge<TVertex>(edges.Current.Source, edges.Current.Destination, edges.Current.Weight));
+            }
+        }
+
         public override bool MoveIterator()
         {
             if (current_vertex is null)
@@ -111,8 +134,10 @@ namespace UGraph.AdjacencyList
                 if (adjacency_lists[edge.Source].Contains(new OutEdge<TVertex>(edge.Destination, edge.Weight)))
                 {
                     adjacency_lists[edge.Source].Remove(new OutEdge<TVertex>(edge.Destination));
-                    if (graphType == typeof(Undirected)) adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source));
+                    if (graphType == typeof(Undirected))
+                        adjacency_lists[edge.Destination].Remove(new OutEdge<TVertex>(edge.Source));
                 }
+
                 if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
                 else AddEdgeUndirectedGraph(edge);
             }
@@ -216,13 +241,14 @@ namespace UGraph.AdjacencyList
             Graph<TVertex, TGraphType> transposedGraph = new AdjacencyList<TVertex, TGraphType>();
             foreach (TVertex vertex in this)
             {
-               transposedGraph.AddVertex(vertex); 
+                transposedGraph.AddVertex(vertex);
             }
 
             IEnumerator<Edge<TVertex>> edges = GetAllEdges();
             while (edges.MoveNext())
             {
-                transposedGraph.AddEdge(new Edge<TVertex>(edges.Current.Destination, edges.Current.Source, edges.Current.Weight));
+                transposedGraph.AddEdge(new Edge<TVertex>(edges.Current.Destination, edges.Current.Source,
+                    edges.Current.Weight));
             }
 
             return transposedGraph;
