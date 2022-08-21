@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace UGraph.Edge
 {
-    public class Edge<TVertex> : IEdge<TVertex>
+    public class Edge<TVertex>
     {
         public TVertex Source { get; }
         public TVertex Destination { get; }

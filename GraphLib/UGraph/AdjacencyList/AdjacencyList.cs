@@ -113,13 +113,13 @@ namespace UGraph.AdjacencyList
 
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWeight()));
-            adjacency_lists[edge.GetDestination()].Add(new(edge.GetSource(), edge.GetWeight()));
+            adjacency_lists[edge.Source].Add(new(edge.Destination, edge.GetWeight()));
+            adjacency_lists[edge.Destination].Add(new(edge.Source, edge.GetWeight()));
         }
 
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Add(new(edge.GetDestination(), edge.GetWeight()));
+            adjacency_lists[edge.Source].Add(new(edge.Destination, edge.GetWeight()));
         }
 
         public override void AddEdge(Edge<TVertex> edge)
@@ -154,13 +154,13 @@ namespace UGraph.AdjacencyList
 
         private void RemoveEdgeUndirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWeight()));
-            adjacency_lists[edge.GetDestination()].Remove(new(edge.GetSource(), edge.GetWeight()));
+            adjacency_lists[edge.Source].Remove(new(edge.Destination, edge.GetWeight()));
+            adjacency_lists[edge.Destination].Remove(new(edge.Source, edge.GetWeight()));
         }
 
         private void RemoveEdgeDirectedGraph(Edge<TVertex> edge)
         {
-            adjacency_lists[edge.GetSource()].Remove(new(edge.GetDestination(), edge.GetWeight()));
+            adjacency_lists[edge.Source].Remove(new(edge.Destination, edge.GetWeight()));
         }
 
         public override void RemoveEdge(Edge<TVertex> edge)
