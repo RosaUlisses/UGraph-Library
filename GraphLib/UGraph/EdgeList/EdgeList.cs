@@ -49,10 +49,10 @@ namespace UGraph.EdgeList
                 AddVertex(vertex);
             }
 
-            IEnumerator<Edge<TVertex>> edges = graph.GetAllEdges();
-            while (edges.MoveNext())
+            List<Edge<TVertex>> edges = graph.GetEdgeList();
+            foreach (Edge<TVertex> edge in edges)
             {
-                AddEdge(new Edge<TVertex>(edges.Current.Source, edges.Current.Destination, edges.Current.Weight));
+                AddEdge(new Edge<TVertex>(edge.Source, edge.Destination, edge.Weight));
             }
         }
 

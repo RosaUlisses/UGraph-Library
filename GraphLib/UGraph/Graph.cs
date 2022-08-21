@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using UGraph.Edge;
 using UGraph.EdgeList;
 using UGraph.AdjacencyList;
 using UGraph.AdjacencyMatrix;
+using UGraph.Exceptions;
 using UGraph.IncidenceMatrix;
 using UGraph.Propertys;
 
@@ -138,6 +140,7 @@ namespace UGraph
             while (stack.Count > 0)
             {
                 TVertex current = stack.Pop();
+                if (visitedVertexes.Contains(current)) continue;
                 visitedVertexes.Add(current);
                 IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
                 while (adjacents.MoveNext())
@@ -154,7 +157,7 @@ namespace UGraph
             return path;
         }
 
-        public List<Tuple<TVertex, int, int>> DepthFirstSearch()
+        public Dictionary<TVertex, Tuple<int, int>> DepthFirstSearch()
         {
             HashSet<TVertex> visitedVertexes = new HashSet<TVertex>();
             Dictionary<TVertex, Tuple<int, int>> times = new Dictionary<TVertex, Tuple<int, int>>();
@@ -168,13 +171,7 @@ namespace UGraph
                 }
             }
 
-            List<Tuple<TVertex, int, int>> timesList = new List<Tuple<TVertex, int, int>>();
-            foreach (KeyValuePair<TVertex, Tuple<int, int>> pair in times)
-            {
-                timesList.Add(new Tuple<TVertex, int, int>(pair.Key, pair.Value.Item1, pair.Value.Item2));
-            }
-
-            return timesList;
+            return times;
         }
 
         private void DetphFirstSearchVisit(TVertex vertex, HashSet<TVertex> visitedVertexes,
@@ -198,14 +195,19 @@ namespace UGraph
 
         public List<TVertex> TopologicalSort()
         {
-            List<Tuple<TVertex, int, int>> timesDFS = DepthFirstSearch();
+            List<KeyValuePair<TVertex, Tuple<int,int>>> timesDFS = DepthFirstSearch().ToList();
             return timesDFS
-                .OrderBy(value => value.Item3)
-                .Select(value => value.Item1)
+                .OrderBy(value => value.Value.Item2)
+                .Select(value => value.Key)
                 .ToList();
         }
 
-        public IEnumerator<Edge<TVertex>> GetAllEdges()
+        protected IEnumerator<Edge<TVertex>> GetAllEdges()
+        {
+            return GetEdgeList().GetEnumerator();
+        }
+
+        public List<Edge<TVertex>> GetEdgeList()
         {
             List<Edge<TVertex>> edges = new List<Edge<TVertex>>();
             foreach (TVertex vertex in this)
@@ -217,7 +219,7 @@ namespace UGraph
                 }
             }
 
-            return edges.GetEnumerator();
+            return edges;
         }
 
         private Dictionary<TVertex, double> InitDistanceMap()
@@ -372,6 +374,55 @@ namespace UGraph
             }
 
             return false;
+        }
+
+        public List<HashSet<TVertex>> StronglyConnectedComponents()
+        {
+            Graph<TVertex, TGraphType> transposedGraph = GetTransposedGraph();
+            Dictionary<TVertex, Tuple<int,int>> timesDFS = DepthFirstSearch();
+            List<HashSet<TVertex>> stronglyConnectedComponents = new List<HashSet<TVertex>>();
+            HashSet<TVertex> visited = new HashSet<TVertex>();
+
+            Stack<TVertex> stack = new Stack<TVertex>();
+            TVertex source = timesDFS.Aggregate((x, y) => x.Value.Item2 > y.Value.Item2 ? x : y).Key;
+            stack.Push(source);
+
+            HashSet<TVertex> connectedComponent = new HashSet<TVertex>();
+            while (stack.Count > 0)
+            {
+                TVertex current = stack.Pop();
+                if (visited.Contains(current)) continue;
+
+                PriorityQueue<TVertex, int> queue = new PriorityQueue<TVertex, int>(Comparer<int>.Create(
+                    (x, y) => x > y ? -1 : (x < y ? 1 : 0)
+                ));
+                
+                List<TVertex> adjacentVertexes = transposedGraph.GetAdjacencyList(current);
+                
+                foreach (TVertex adjacentVertex in adjacentVertexes)
+                {
+                    if (!visited.Contains(adjacentVertex))
+                    {
+                       queue.Enqueue(adjacentVertex, timesDFS[adjacentVertex].Item2); 
+                    }
+                }
+                
+                visited.Add(current);
+                connectedComponent.Add(current);
+
+                if (queue.Count == 0)
+                {
+                    stronglyConnectedComponents.Add(connectedComponent);
+                    connectedComponent = new HashSet<TVertex>();
+                }
+
+                for (int i = 0; i < queue.Count; i++)
+                {
+                    stack.Push(queue.Dequeue());
+                }
+            }
+
+            return stronglyConnectedComponents;
         }
 
         public override bool Equals(object? obj)
