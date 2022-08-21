@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UGraph.AdjacencyList;
 using UGraph.Propertys;
 using UGraph.Edge;
 using UGraph.Exceptions;
@@ -58,7 +57,7 @@ namespace UGraph.AdjacencyMatrix
             }
         }
 
-        public override bool MoveIterator()
+        protected override bool MoveIterator()
         {
             if (current_vertex is null)
             {
@@ -74,12 +73,12 @@ namespace UGraph.AdjacencyMatrix
             return true;
         }
 
-        public override TVertex GetIteratorValue()
+        protected override TVertex GetIteratorValue()
         {
             return current_vertex.Current;
         }
 
-        public override void ResetIterator()
+        protected override void ResetIterator()
         {
             current_vertex = vertex_index_map.Keys.GetEnumerator();
         }

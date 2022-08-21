@@ -5,32 +5,29 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using UGraph.Edge;
-using UGraph.EdgeList;
-using UGraph.Propertys;
 using UGraph.Exceptions;
+using UGraph.Propertys;
 
 namespace UGraph.AdjacencyList
 {
-    public class AdjacencyList<TVertex, TGraphType, TList, TMap> : Graph<TVertex, TGraphType>
+    public class AdjacencyList<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
         where TGraphType : GraphType
-        where TList : ICollection<OutEdge<TVertex>>, new()
-        where TMap : IDictionary<TVertex, TList>, new()
     {
         private readonly Type graphType;
-        private IDictionary<TVertex, TList> adjacency_lists;
+        private Dictionary<TVertex, List<OutEdge<TVertex>>> adjacency_lists;
+
+        private IEnumerator<TVertex> current_vertex;
 
         public int Count
         {
             get { return adjacency_lists.Count; }
         }
 
-        private IEnumerator<TVertex> current_vertex;
-
         public AdjacencyList()
         {
+            adjacency_lists = new Dictionary<TVertex, List<OutEdge<TVertex>>>();
             graphType = typeof(TGraphType);
-            adjacency_lists = new TMap();
             current_vertex = null;
         }
 
@@ -41,9 +38,10 @@ namespace UGraph.AdjacencyList
                 throw new InvalidGraphException($"Graph {nameof(graph)} is null");
             }
 
+            adjacency_lists = new Dictionary<TVertex, List<OutEdge<TVertex>>>();
             graphType = typeof(TGraphType);
-            adjacency_lists = new TMap();
             current_vertex = null;
+
             foreach (TVertex vertex in graph)
             {
                 AddVertex(vertex);
@@ -52,11 +50,11 @@ namespace UGraph.AdjacencyList
             List<Edge<TVertex>> edges = graph.GetEdgeList();
             foreach (Edge<TVertex> edge in edges)
             {
-                AddEdge(new Edge<TVertex>(edge.Source, edge.Destination, edge.Weight)); 
-            } 
+                AddEdge(new Edge<TVertex>(edge.Source, edge.Destination, edge.Weight));
+            }
         }
 
-        public override bool MoveIterator()
+        protected override bool MoveIterator()
         {
             if (current_vertex is null)
             {
@@ -72,12 +70,12 @@ namespace UGraph.AdjacencyList
             return true;
         }
 
-        public override TVertex GetIteratorValue()
+        protected override TVertex GetIteratorValue()
         {
             return current_vertex.Current;
         }
 
-        public override void ResetIterator()
+        protected override void ResetIterator()
         {
             current_vertex = adjacency_lists.Keys.GetEnumerator();
         }
@@ -87,7 +85,7 @@ namespace UGraph.AdjacencyList
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
             try
             {
-                adjacency_lists.Add(vertex, new TList());
+                adjacency_lists.Add(vertex, new List<OutEdge<TVertex>>());
             }
             catch (ArgumentException e)
             {
@@ -230,17 +228,17 @@ namespace UGraph.AdjacencyList
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
+                throw new InvalidVertexException($"The source vertex {nameof(vertex)} is null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
+                throw new InvalidVertexException($"The source vertex {nameof(vertex)} does not exist in the graph");
             }
         }
 
         protected override Graph<TVertex, TGraphType> GetTransposedGraph()
         {
-            Graph<TVertex, TGraphType> transposedGraph = new AdjacencyList<TVertex, TGraphType, TList, TMap>();
+            Graph<TVertex, TGraphType> transposedGraph = new AdjacencyList<TVertex, TGraphType>();
             foreach (TVertex vertex in this)
             {
                 transposedGraph.AddVertex(vertex);
@@ -264,11 +262,11 @@ namespace UGraph.AdjacencyList
             }
             catch (ArgumentNullException e)
             {
-                throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
+                throw new InvalidVertexException($"The source vertex {nameof(vertex)} is null");
             }
             catch (KeyNotFoundException e)
             {
-                throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
+                throw new InvalidVertexException($"The source vertex {nameof(vertex)} does not exist in the graph");
             }
         }
     }

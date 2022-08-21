@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UGraph.Edge;
-using UGraph.EdgeList;
-using UGraph.AdjacencyList;
 using UGraph.AdjacencyMatrix;
 using UGraph.Exceptions;
 using UGraph.IncidenceMatrix;
@@ -38,9 +36,9 @@ namespace UGraph
             return (IEnumerator)this;
         }
 
-        public abstract void ResetIterator();
-        public abstract bool MoveIterator();
-        public abstract TVertex GetIteratorValue();
+        protected abstract void ResetIterator();
+        protected abstract bool MoveIterator();
+        protected abstract TVertex GetIteratorValue();
 
         public abstract void AddVertex(TVertex vertex);
         public abstract void RemoveVertex(TVertex vertex);

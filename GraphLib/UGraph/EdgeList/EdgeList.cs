@@ -7,15 +7,13 @@ using UGraph.Exceptions;
 
 namespace UGraph.EdgeList
 {
-    public class EdgeList<TVertex, TGraphType, TVertexList, TEdgeList> : Graph<TVertex, TGraphType>
+    public class EdgeList<TVertex, TGraphType> : Graph<TVertex, TGraphType>
         where TVertex : IComparable<TVertex>
         where TGraphType : GraphType
-        where TVertexList : ICollection<TVertex>, new()
-        where TEdgeList : ICollection<Edge<TVertex>>, new()
     {
         private readonly Type graphType;
-        private TVertexList vertexes;
-        private TEdgeList edge_list;
+        private HashSet<TVertex> vertexes;
+        private HashSet<Edge<TVertex>> edge_list;
 
         public int Count
         {
@@ -27,8 +25,8 @@ namespace UGraph.EdgeList
         public EdgeList()
         {
             graphType = typeof(TGraphType);
-            vertexes = new TVertexList();
-            edge_list = new TEdgeList();
+            vertexes = new HashSet<TVertex>();
+            edge_list = new HashSet<Edge<TVertex>>();
             current_vertex = null;
         }
 
@@ -40,8 +38,8 @@ namespace UGraph.EdgeList
             }
 
             graphType = typeof(TGraphType);
-            vertexes = new TVertexList();
-            edge_list = new TEdgeList();
+            vertexes = new HashSet<TVertex>();
+            edge_list = new HashSet<Edge<TVertex>>();
             current_vertex = null;
 
             foreach (TVertex vertex in graph)
@@ -56,7 +54,7 @@ namespace UGraph.EdgeList
             }
         }
 
-        public override bool MoveIterator()
+        protected override bool MoveIterator()
         {
             if (current_vertex is null)
             {
@@ -72,12 +70,12 @@ namespace UGraph.EdgeList
             return true;
         }
 
-        public override TVertex GetIteratorValue()
+        protected override TVertex GetIteratorValue()
         {
             return current_vertex.Current;
         }
 
-        public override void ResetIterator()
+        protected override void ResetIterator()
         {
             current_vertex = vertexes.GetEnumerator();
         }
@@ -113,11 +111,22 @@ namespace UGraph.EdgeList
 
         private void AddEdgeDirectedGraph(Edge<TVertex> edge)
         {
+            if (edge_list.Contains(edge))
+            {
+                edge_list.Remove(edge);
+            }
+
             edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
         }
 
         private void AddEdgeUndirectedGraph(Edge<TVertex> edge)
         {
+            if (edge_list.Contains(edge))
+            {
+                edge_list.Remove(edge);
+                edge_list.Remove(new Edge<TVertex>(edge.GetSource(), edge.GetDestination()));
+            }
+
             edge_list.Add(new Edge<TVertex>(edge.GetSource(), edge.GetDestination(), edge.GetWeight()));
             edge_list.Add(new Edge<TVertex>(edge.GetDestination(), edge.GetSource(), edge.GetWeight()));
         }
@@ -142,8 +151,7 @@ namespace UGraph.EdgeList
 
             if (edge_list.Contains(edge))
             {
-                edge_list.Remove(edge);
-                if (graphType == typeof(Undirected)) edge_list.Remove(new Edge<TVertex>(edge.Destination, edge.Source));
+                throw new InvalidEdgeException($"Edge {nameof(edge)} already exists in the graph");
             }
 
             if (graphType == typeof(Directed)) AddEdgeDirectedGraph(edge);
@@ -188,11 +196,6 @@ namespace UGraph.EdgeList
             edge_list.Clear();
         }
 
-        public override bool Contains(TVertex vertex)
-        {
-            return vertexes.Contains(vertex);
-        }
-
         public override bool AreConnected(TVertex a, TVertex b)
         {
             if (a is null || b is null)
@@ -208,6 +211,11 @@ namespace UGraph.EdgeList
             return edge_list.Where(edge => edge.Source.Equals(a) && edge.Destination.Equals(b)).ToList().Count != 0;
         }
 
+        public override bool Contains(TVertex vertex)
+        {
+            return vertexes.Contains(vertex);
+        }
+
         public override int GetCount()
         {
             return Count;
@@ -215,7 +223,7 @@ namespace UGraph.EdgeList
 
         protected override Graph<TVertex, TGraphType> GetTransposedGraph()
         {
-            Graph<TVertex, TGraphType> transposedGraph = new EdgeList<TVertex, TGraphType, TVertexList, TEdgeList>();
+            Graph<TVertex, TGraphType> transposedGraph = new EdgeList<TVertex, TGraphType>();
             foreach (TVertex vertex in this)
             {
                 transposedGraph.AddVertex(vertex);
@@ -236,7 +244,7 @@ namespace UGraph.EdgeList
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
 
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
-            if (vertexes.Contains(vertex))
+            if (!vertexes.Contains(vertex))
             {
                 throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
@@ -261,6 +269,7 @@ namespace UGraph.EdgeList
             {
                 throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }
+
 
             foreach (Edge<TVertex> edge in edge_list)
             {

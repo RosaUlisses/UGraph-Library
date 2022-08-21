@@ -64,7 +64,7 @@ namespace UGraph.IncidenceMatrix
             }
         }
 
-        public override bool MoveIterator()
+        protected override bool MoveIterator()
         {
             if (current_vertex is null)
             {
@@ -80,12 +80,12 @@ namespace UGraph.IncidenceMatrix
             return true;
         }
 
-        public override TVertex GetIteratorValue()
+        protected override TVertex GetIteratorValue()
         {
             return current_vertex.Current;
         }
 
-        public override void ResetIterator()
+        protected override void ResetIterator()
         {
             current_vertex = vertex_index_map.Keys.GetEnumerator();
         }
