@@ -239,7 +239,7 @@ namespace UGraph.EdgeList
             return transposedGraph;
         }
 
-        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetEdgesFromVertex(TVertex vertex)
         {
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
 
@@ -265,7 +265,7 @@ namespace UGraph.EdgeList
             List<TVertex> adjacents = new List<TVertex>();
 
             if (vertex is null) throw new InvalidVertexException($"Vertex {nameof(vertex)} is null");
-            if (vertexes.Contains(vertex))
+            if (!vertexes.Contains(vertex))
             {
                 throw new InvalidVertexException($"Vertex {nameof(vertex)} does not exist in the graph");
             }

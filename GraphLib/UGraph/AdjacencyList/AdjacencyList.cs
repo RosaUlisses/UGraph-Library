@@ -220,7 +220,7 @@ namespace UGraph.AdjacencyList
             return Count;
         }
 
-        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetEdgesFromVertex(TVertex vertex)
         {
             try
             {

@@ -48,7 +48,7 @@ namespace UGraph
         public abstract bool Contains(TVertex vertex);
         public abstract bool AreConnected(TVertex a, TVertex b);
         public abstract int GetCount();
-        protected abstract IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex);
+        protected abstract IEnumerator<OutEdge<TVertex>> GetEdgesFromVertex(TVertex vertex);
         protected abstract Graph<TVertex, TGraphType> GetTransposedGraph();
         public abstract List<TVertex> GetAdjacencyList(TVertex vertex);
 
@@ -65,7 +65,7 @@ namespace UGraph
             {
                 TVertex vertex = queue.Dequeue();
                 visitedVertexes.Add(vertex);
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(vertex);
                 while (adjacents.MoveNext())
                 {
                     if (!visitedVertexes.Contains(adjacents.Current.Destination))
@@ -105,7 +105,7 @@ namespace UGraph
             {
                 TVertex vertex = queue.Dequeue();
                 visitedVertexes.Add(vertex);
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(vertex);
                 while (adjacents.MoveNext())
                 {
                     if (!visitedVertexes.Contains(adjacents.Current.Destination))
@@ -140,7 +140,7 @@ namespace UGraph
                 TVertex current = stack.Pop();
                 if (visitedVertexes.Contains(current)) continue;
                 visitedVertexes.Add(current);
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(current);
                 while (adjacents.MoveNext())
                 {
                     if (!visitedVertexes.Contains(adjacents.Current.Destination))
@@ -175,9 +175,10 @@ namespace UGraph
         private void DetphFirstSearchVisit(TVertex vertex, HashSet<TVertex> visitedVertexes,
             Dictionary<TVertex, Tuple<int, int>> times, ref int time)
         {
-            int firstTime = time + 1;
+            time++;
+            int firstTime = time;
             visitedVertexes.Add(vertex);
-            IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+            IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(vertex);
 
             while (adjacents.MoveNext())
             {
@@ -187,15 +188,16 @@ namespace UGraph
                 }
             }
 
-            int secondTime = time + 1;
+            time++;
+            int secondTime = time;
             times[vertex] = new Tuple<int, int>(firstTime, secondTime);
         }
 
         public List<TVertex> TopologicalSort()
         {
-            List<KeyValuePair<TVertex, Tuple<int,int>>> timesDFS = DepthFirstSearch().ToList();
+            List<KeyValuePair<TVertex, Tuple<int, int>>> timesDFS = DepthFirstSearch().ToList();
             return timesDFS
-                .OrderBy(value => value.Value.Item2)
+                .OrderByDescending(value => value.Value.Item2)
                 .Select(value => value.Key)
                 .ToList();
         }
@@ -210,7 +212,7 @@ namespace UGraph
             List<Edge<TVertex>> edges = new List<Edge<TVertex>>();
             foreach (TVertex vertex in this)
             {
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(vertex);
                 while (adjacents.MoveNext())
                 {
                     edges.Add(new Edge<TVertex>(vertex, adjacents.Current.Destination, adjacents.Current.Weight));
@@ -259,7 +261,7 @@ namespace UGraph
                     current = queue.Dequeue();
                 }
 
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(current);
                 while (adjacents.MoveNext())
                 {
                     double previousDistance = distances[adjacents.Current.Destination];
@@ -346,7 +348,7 @@ namespace UGraph
             {
                 TVertex current = stack.Pop();
                 visitedVertexes.Add(current);
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(current);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(current);
                 while (adjacents.MoveNext())
                 {
                     if (visitedVertexes.Contains(adjacents.Current.Destination))
@@ -377,34 +379,36 @@ namespace UGraph
         public List<HashSet<TVertex>> StronglyConnectedComponents()
         {
             Graph<TVertex, TGraphType> transposedGraph = GetTransposedGraph();
-            Dictionary<TVertex, Tuple<int,int>> timesDFS = DepthFirstSearch();
+            Dictionary<TVertex, Tuple<int, int>> timesDFS = DepthFirstSearch();
             List<HashSet<TVertex>> stronglyConnectedComponents = new List<HashSet<TVertex>>();
+
             HashSet<TVertex> visited = new HashSet<TVertex>();
-
-            Stack<TVertex> stack = new Stack<TVertex>();
-            TVertex source = timesDFS.Aggregate((x, y) => x.Value.Item2 > y.Value.Item2 ? x : y).Key;
-            stack.Push(source);
-
+            
+            // The breadth first search must be realized following the end time by descending order
+            Stack<TVertex> stack = new Stack<TVertex>(timesDFS.OrderBy((x) => x.Value.Item2).Select((x) => x.Key));
+                
             HashSet<TVertex> connectedComponent = new HashSet<TVertex>();
+
             while (stack.Count > 0)
             {
                 TVertex current = stack.Pop();
                 if (visited.Contains(current)) continue;
 
+                // The vertexes with bigger end time must be visited first
                 PriorityQueue<TVertex, int> queue = new PriorityQueue<TVertex, int>(Comparer<int>.Create(
                     (x, y) => x > y ? -1 : (x < y ? 1 : 0)
                 ));
-                
+
                 List<TVertex> adjacentVertexes = transposedGraph.GetAdjacencyList(current);
-                
+
                 foreach (TVertex adjacentVertex in adjacentVertexes)
                 {
                     if (!visited.Contains(adjacentVertex))
                     {
-                       queue.Enqueue(adjacentVertex, timesDFS[adjacentVertex].Item2); 
+                        queue.Enqueue(adjacentVertex, timesDFS[adjacentVertex].Item2);
                     }
                 }
-                
+
                 visited.Add(current);
                 connectedComponent.Add(current);
 
@@ -436,7 +440,7 @@ namespace UGraph
             List<Edge<TVertex>> this_edges = new List<Edge<TVertex>>();
             foreach (TVertex vertex in this)
             {
-                IEnumerator<OutEdge<TVertex>> adjacents = GetAdjacentVertexes(vertex);
+                IEnumerator<OutEdge<TVertex>> adjacents = GetEdgesFromVertex(vertex);
                 this_vertexes.Add(vertex);
                 while (adjacents.MoveNext())
                 {
@@ -448,7 +452,7 @@ namespace UGraph
             List<Edge<TVertex>> edges = new List<Edge<TVertex>>();
             foreach (TVertex vertex in graph)
             {
-                IEnumerator<OutEdge<TVertex>> adjacents = graph.GetAdjacentVertexes(vertex);
+                IEnumerator<OutEdge<TVertex>> adjacents = graph.GetEdgesFromVertex(vertex);
                 vertexes.Add(vertex);
                 while (adjacents.MoveNext())
                 {

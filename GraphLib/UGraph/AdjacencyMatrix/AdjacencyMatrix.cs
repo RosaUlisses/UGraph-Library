@@ -249,7 +249,7 @@ namespace UGraph.AdjacencyMatrix
             return Count;
         }
 
-        protected override IEnumerator<OutEdge<TVertex>> GetAdjacentVertexes(TVertex vertex)
+        protected override IEnumerator<OutEdge<TVertex>> GetEdgesFromVertex(TVertex vertex)
         {
             List<OutEdge<TVertex>> adjacents = new List<OutEdge<TVertex>>();
             try

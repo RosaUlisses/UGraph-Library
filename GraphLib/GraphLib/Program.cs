@@ -1,19 +1,19 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Collections;
+﻿using System.Collections;
 using UGraph;
+using UGraph.Edge;
 using UGraph.Propertys;
 using UGraph.EdgeList;
 
 Graph<char, Directed> g = new EdgeList<char, Directed>();
 
 g.AddVertex('a');
+g.AddVertex('b');
 g.AddVertex('c');
+g.AddVertex('d');
 
-foreach (var vertex in g)
-{
-   Console.WriteLine(vertex); 
-}
 
+g.AddEdge(new Edge<char>('a', 'b'));
+g.AddEdge(new Edge<char>('a', 'c'));
+g.AddEdge(new Edge<char>('c', 'd'));
 
 
