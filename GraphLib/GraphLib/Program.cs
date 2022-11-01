@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UGraph;
-using UGraph.Edge;
 using UGraph.Propertys;
 using UGraph.EdgeList;
 

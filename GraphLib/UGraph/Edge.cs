@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Security.Cryptography;
 
-namespace UGraph.Edge
+namespace UGraph
 {
     public class Edge<TVertex>
     {

@@ -1,6 +1,4 @@
-﻿using UGraph.Edge;
-
-namespace UGraph.Edge
+﻿namespace UGraph
 {
     public class OutEdge<TVertex> : IComparable<OutEdge<TVertex>>
     where TVertex : IComparable<TVertex>

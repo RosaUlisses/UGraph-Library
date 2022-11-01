@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
-using UGraph.Edge;
 using UGraph.AdjacencyMatrix;
 using UGraph.Exceptions;
 using UGraph.IncidenceMatrix;

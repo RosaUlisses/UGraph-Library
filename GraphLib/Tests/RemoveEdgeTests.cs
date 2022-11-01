@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Interfaces;
 using NUnit.Framework;
 using UGraph;
-using UGraph.Edge;
 using UGraph.AdjacencyList;
 using UGraph.EdgeList;
 using UGraph.AdjacencyMatrix;

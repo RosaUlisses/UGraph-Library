@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using UGraph;
-using UGraph.Edge;
 using UGraph.AdjacencyList;
 using UGraph.EdgeList;
 using UGraph.AdjacencyMatrix;
